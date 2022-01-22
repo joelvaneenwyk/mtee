@@ -1,0 +1,16 @@
+---
+BasedOnStyle: Microsoft
+AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveMacros: 'true'
+AlignEscapedNewlines: Left
+AlignOperands: 'true'
+AlignTrailingComments: 'true'
+AlwaysBreakBeforeMultilineStrings: 'true'
+ColumnLimit: '120'
+KeepEmptyLinesAtTheStartOfBlocks: 'false'
+MaxEmptyLinesToKeep: '1'
+SpaceAfterCStyleCast: 'false'
+SpacesInParentheses: 'false'
+TabWidth: '4'
+
+...

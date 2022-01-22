@@ -1,0 +1,30 @@
+{
+    "[cpp]": {
+        "editor.formatOnSave": true,
+        "editor.wordBasedSuggestions": false,
+        "editor.suggest.insertMode": "replace",
+        "editor.semanticHighlighting.enabled": true
+    },
+
+    "cSpell.words": [
+        "HFNETCHK",
+        "HLOCAL",
+        "HWND",
+        "Jari",
+        "Kulmala",
+        "LPARGS",
+        "LPDWORD",
+        "LPWSTR",
+        "lstrcmp",
+        "lstrcmpi",
+        "lstrcpy",
+        "Mtee",
+        "PCHAR",
+        "PFILEINFO",
+        "PWCHAR",
+        "PWSTR",
+        "Ritchie",
+        "ULARGE",
+        "wsprintf"
+    ]
+}

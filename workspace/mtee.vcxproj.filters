@@ -38,6 +38,9 @@
     <ClCompile Include="..\perr.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\pch.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\header.h">
@@ -54,5 +57,6 @@
     <None Include="..\.github\workflows\codeql-analysis.yml">
       <Filter>Workflows</Filter>
     </None>
+    <None Include="..\.clang-format" />
   </ItemGroup>
 </Project>

@@ -5,17 +5,17 @@
 * [Examples](#examples)
 * [FAQs](#faqs)
 * [Screenshots](#screenshots)
-* [CPU Load](#cpuload)
+* [CPU Load](#cpu-load)
 * [Revisions](#revisions)
 * [Copyright and License](#copyright-and-license)
 
 ## Synopsis<a name="synopsis"></a>
 
-Mtee is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.
+`mtee` is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.
 
-Mtee is a 45kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
+`mtee` is a small (~45kb) standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of `mtee` from your system, just delete it.
 
-Mtee is simple to use and only has several options. To list them, type:-
+`mtee` is simple to use and only has several options. To list them, type:
 
 ```batch
 mtee /?
@@ -33,16 +33,16 @@ mtee /?
   /U    Convert output to UNICODE. Default output is same as input.
   /E    Exit with exit code of piped process.
   /ET   Calculate and display elapsed time.
-  /CPU  Calculate and display average CPU load during execution.  
+  /CPU  Calculate and display average CPU load during execution.
   /+    Append to existing file. If omitted, existing file is overwritten.
   file  File to receive the output. File is overwritten if /+ not specified.
   ...   Any number of additional files. Use /+ before each file to append.
 
   Example usage:-
 
-  1) script.cmd | mtee result.txt
-  2) ftp -n -s:ftp.scr | mtee local.log /+ \\server\logs$\remote.log
-  3) update.cmd 2>&1 | mtee/d/t/+ log.txt
+  1) `script.cmd | mtee result.txt`
+  2) `ftp -n -s:ftp.scr | mtee local.log /+ \\server\logs$\remote.log`
+  3) `update.cmd 2>&1 | mtee/d/t/+ log.txt`
 
   1) Sends the output of script.cmd to the console and to result.log. If
      result.txt already exists, it will be overwritten.
@@ -54,19 +54,19 @@ mtee /?
 
 ## Examples<a name="examples"></a>
 
-View Mtee help screen:-
+View `mtee` help screen:-
 
 ```batch
-mtee/?
+mtee /?
 ````
 
-Send the output of script.cmd to the console and to RESULT.LOG. If RESULT.LOG already exists, it will be overwritten:-
+Send the output of script.cmd to the console and to RESULT.LOG. If RESULT.LOG already exists, it will be overwritten:
 
 ```batch
 script.cmd | mtee result.log
 ```
 
-Send the output of the automated ftp session to the console and to two log files, LOCAL.LOG is overwritten if it already exists. REMOTE.LOG is appended to if it exists, otherwise it is created:-
+Send the output of the automated ftp session to the console and to two log files, LOCAL.LOG is overwritten if it already exists. REMOTE.LOG is appended to if it exists, otherwise it is created:
 
 ```batch
 ftp -n -s:ftp.scr | mtee local.log /+ \\server\logs\remote.log
@@ -78,7 +78,7 @@ Make two copies of LOG whilst viewing LOG on the screen. If NEW1 and NEW2 alread
 mtee < log new1 new2
 ```
 
-Redirect stdout and stderr from UPDATE.CMD to the console and appends to LOG.TXT. Each line is prefixed with local date and time:-
+Redirect stdout and stderr from UPDATE.CMD to the console and appends to LOG.TXT. Each line is prefixed with local date and time:
 
 ```batch
 update.cmd 2>&1 | mtee/d/t/+ log.txt
@@ -90,13 +90,13 @@ Send the output from BACKUP.CMD to the console and two remote log files. If ther
 backup.cmd | mtee /c/+ \\svr1\log$\bu.log /+ \\svr2\logs$\bu.log
 ```
 
-Make multiple carbon copies of patch.exe:-
+Make multiple carbon copies of `patch.exe`:
 
 ```batch
 type patch.exe|mtee \\pc1\c$\patch.exe \\pc2\c$\patch.exe \\pc3\c$\patch.exe
 ```
 
-Make a unicode log of HFNETCHK:-
+Make a unicode log of `HFNETCHK`:
 
 ```batch
 hfnetchk|mtee/u log
@@ -112,24 +112,20 @@ batch.cmd 2>&1 1>&3 3>&1 |mtee/t/d log
 
 How can I determine the exit code of the process piped into Mtee?
 
-> Update Mtee to at least version v2.21 and use the /E option.
+> Update `mtee` to at least version v2.21 and use the `/E` option.
 
 ## Screenshots<a name="screenshots"></a>
 
-![Screenshot of Mtee](https://raw.githubusercontent.com/danielt3/mtee/master/mtee-screenshot1.png)
+![Screenshot of Mtee](resources/mtee-screenshot.png)
 
-## CPU Load<a name="cpuload"></a>
+## CPU Load<a name="cpu-load"></a>
 
-The CPU load calculations are based in the information from the ```GetSystemTimes``` Windows API. 
+The CPU load calculations are based in the information from the ```GetSystemTimes``` Windows API.
 For reference, please check: https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-getsystemtimes
 
-The algorithm works by reading the *idle*, *kernel* and *user* times of the system (the time the system spent
-executing in each of these modes). Then, we define *load time* as the *kernel* time plus the *user time* and
-*total time* as *kernel time* plus *user time* plus *idle time*. Finally, the cpu load is calculated as
-the quotient between *load time* and *total time*. The mindset here is that everything that is not *idle* means
-loading the CPU.
+The algorithm works by reading the *idle*, *kernel* and *user* times of the system (the time the system spent executing in each of these modes). Then, we define *load time* as the *kernel* time plus the *user time* and *total time* as *kernel time* plus *user time* plus *idle time*. Finally, the cpu load is calculated as the quotient between *load time* and *total time*. The mindset here is that everything that is not *idle* means loading the CPU.
 
-This is a rough estimate and subject to criticsm. I'm willing to listen and implement better approaches.
+This is a rough estimate and subject to criticism. I'm willing to listen and implement better approaches.
 
 ## Revisions<a name="revisions"></a>
 

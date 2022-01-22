@@ -23,7 +23,10 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: windows-latest
+
+    # The 'windows-2022' image is not yet supported for compiled languages as of January 2022.
+    runs-on: windows-2019
+
     permissions:
       actions: read
       contents: read
@@ -53,7 +56,7 @@ jobs:
         vs-version: '16.5'
 
     - name: Build Solution
-      run: msbuild /p:Configuration=Release "workspace\mtee.sln"      
+      run: msbuild /p:PlatformToolset=v142 /p:Configuration=Release "workspace\mtee.sln"      
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

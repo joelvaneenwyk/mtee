@@ -23,11 +23,11 @@ BOOL WriteBufferToConsoleAndFilesA(LPARGS args, PCHAR lpBuf, DWORD dwCharsRead, 
 			if(*pTail++ == 0x0A)
 			{
 				bNewLine = TRUE;
-				if(!WriteBufferToConsoleAndFilesA(args, pHead, pTail - pHead, FALSE, FALSE)) return FALSE;
+				if(!WriteBufferToConsoleAndFilesA(args, pHead, (DWORD)(pTail - pHead), FALSE, FALSE)) return FALSE;
 				pHead = pTail;
 			}
 		}
-		if(!WriteBufferToConsoleAndFilesA(args, pHead, pTail - pHead, FALSE, FALSE)) return FALSE;
+		if(!WriteBufferToConsoleAndFilesA(args, pHead, (DWORD)(pTail - pHead), FALSE, FALSE)) return FALSE;
 	}
 	else
 	{
@@ -71,11 +71,11 @@ BOOL WriteBufferToConsoleAndFilesW(LPARGS args, PWCHAR lpBuf, DWORD dwCharsRead,
 			if(*pTail++ == L'\n')
 			{
 				bNewLine = TRUE;
-				if(!WriteBufferToConsoleAndFilesW(args, pHead, pTail - pHead, FALSE, FALSE)) return FALSE;
+				if(!WriteBufferToConsoleAndFilesW(args, pHead, (DWORD)(pTail - pHead), FALSE, FALSE)) return FALSE;
 				pHead = pTail;
 			}
 		}
-		if(!WriteBufferToConsoleAndFilesW(args, pHead, pTail - pHead, FALSE, FALSE)) return FALSE;
+		if(!WriteBufferToConsoleAndFilesW(args, pHead, (DWORD)(pTail - pHead), FALSE, FALSE)) return FALSE;
 	}
 	else
 	{

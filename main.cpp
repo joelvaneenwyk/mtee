@@ -55,7 +55,7 @@ int main(VOID)
 	DWORD dwOperation;
 	int iFlags;
 #ifdef _DEBUG
-	MessageBox(0,"start", "mtee", MB_OK);
+	MessageBox(0, L"start", L"mtee", MB_OK);
 #endif
 /*
 	if(!GetWinVer())
@@ -300,8 +300,10 @@ int main(VOID)
 		}
 	}
 
-    LARGE_INTEGER startTimestamp, endTimestamp, elapsedTime;
-    LARGE_INTEGER frequency;
+	LARGE_INTEGER startTimestamp = { 0 };
+	LARGE_INTEGER endTimestamp = { 0 };
+	LARGE_INTEGER elapsedTime = { 0 };
+	LARGE_INTEGER frequency = { 0 };
 
     if( args.bElapsedTime )
     {
@@ -395,10 +397,11 @@ int main(VOID)
     {
         char cpuLoadStr[128];
         int cpuLoadStrlen = 0;
-        float averageCpuLoad = ( accumulatedCpuLoad / (float)nSamples );
+        double averageCpuLoad = ( accumulatedCpuLoad / (float)nSamples );
 
-        cpuLoadStrlen = snprintf( cpuLoadStr, sizeof(cpuLoadStr),
-                                 "CPU Load (avg.) = %5.2f\n", averageCpuLoad );
+        cpuLoadStrlen = snprintf( 
+			cpuLoadStr, sizeof(cpuLoadStr),
+			"CPU Load (avg.) = %5.2f\n", averageCpuLoad );
 
         WriteBufferToConsoleAndFilesA(&args, cpuLoadStr, cpuLoadStrlen, FALSE,
                                                                         FALSE);

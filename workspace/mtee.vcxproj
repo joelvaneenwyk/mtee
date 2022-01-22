@@ -152,6 +152,10 @@
     <ClInclude Include="..\cpuload.h" />
     <ClInclude Include="..\header.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.github\workflows\codeql-analysis.yml" />
+    <None Include="..\.github\workflows\main.yml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

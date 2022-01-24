@@ -5,6 +5,7 @@
 build
 tests/output/
 /*.txt
+!/CMakeLists.txt
 
 **/bin/*
 **/obj/*

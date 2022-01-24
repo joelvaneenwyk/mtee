@@ -70,7 +70,7 @@ BOOL cpuLoadGetCurrentCpuLoad(double *currentCpuLoad)
         loadTime.QuadPart = kernelTime.QuadPart + userTime.QuadPart;
         totalTime.QuadPart = kernelTime.QuadPart + userTime.QuadPart + idleTime.QuadPart;
 
-        *currentCpuLoad = (double)((loadTime.QuadPart * 100.0) / (totalTime.QuadPart));
+        *currentCpuLoad = ((double)loadTime.QuadPart * 100.0) / (double)(totalTime.QuadPart);
 
         lastIdleTime_.QuadPart = idleTime.QuadPart;
         lastKernelTime_.QuadPart = kernelTime.QuadPart;

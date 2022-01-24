@@ -26,9 +26,9 @@ BOOL ParseCommandlineW(LPARGS args)
     // redirected.
     //
     fi = &args->fi;
-    fi->hFile = NULL;
-    fi->lpFileName = NULL;
-    fi->fiNext = NULL;
+    fi->hFile = nullptr;
+    fi->lpFileName = nullptr;
+    fi->fiNext = nullptr;
     fi->bAppend = FALSE;
 
     while (GetCommandLineTokenW(&lpToken))
@@ -268,7 +268,6 @@ BOOL GetCommandLineTokenW(PWCHAR *lpToken)
             //
             else if (*p == L'/')
             {
-                cQuote = 0;
                 bInToken = !bInToken;
 
                 //
@@ -276,6 +275,8 @@ BOOL GetCommandLineTokenW(PWCHAR *lpToken)
                 //
                 if (!bInToken && bOutQuotes)
                     break;
+
+                cQuote = 0;
             }
 
             cQuote = 0;

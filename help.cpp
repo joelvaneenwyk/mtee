@@ -1,6 +1,6 @@
 #include "header.h"
 
-int ShowHelp()
+UINT ShowHelp()
 {
     DWORD cBytes;
     PCHAR lpHelpMsg = (PCHAR)(
@@ -47,7 +47,7 @@ int ShowHelp()
         "appends to\r\n"
         "     log.txt. Each line is prefixed with local date and time.\r\n");
 
-    WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), lpHelpMsg, lstrlenA(lpHelpMsg), &cBytes, NULL);
+    WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), lpHelpMsg, (DWORD)lstrlenA(lpHelpMsg), &cBytes, NULL);
 
     return 0;
 }

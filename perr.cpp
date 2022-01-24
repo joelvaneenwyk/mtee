@@ -14,8 +14,9 @@ DWORD Perror(DWORD dwErrNum)
     // get the text description for that error number from the system
     //
     cMsgLen = FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, dwLastErr, MAKELANGID(0, SUBLANG_ENGLISH_US),
-        (LPTSTR)&pErrBuf, MAX_MSG_BUF_SIZE, NULL);
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, dwLastErr,
+        MAKELANGID(0, SUBLANG_ENGLISH_US),
+        (LPTSTR)&pErrBuf, MAX_MSG_BUF_SIZE, nullptr);
 
     if (cMsgLen)
     {
@@ -29,7 +30,7 @@ VOID Verbose(LPCTSTR szMsg)
 {
     DWORD cBytes;
 
-    WriteFile(GetStdHandle(STD_ERROR_HANDLE), szMsg, lstrlen(szMsg), &cBytes, NULL);
+    WriteFile(GetStdHandle(STD_ERROR_HANDLE), szMsg, (DWORD)lstrlen(szMsg), &cBytes, nullptr);
 }
 
 /*

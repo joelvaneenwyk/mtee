@@ -1,8 +1,20 @@
-#define _WIN32_WINNT 0x0502
-#define WIN32_LEAN_AND_MEAN
+///
+/// `wtee`
+/// 
+/// Copyright (c) 2013 Ritchie Lawrence
+/// 
 
-#include <windows.h>
-#include <tlhelp32.h>
+#pragma warning(push)
+#pragma warning(disable : 5039)
+#pragma warning(disable : 4668)
+#pragma warning(disable : 4820)
+#   include <Windows.h>
+#   include <TlHelp32.h>
+#pragma warning(pop)
+
+#pragma warning(disable : 5045)  // Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
+#pragma warning(disable : 4711) // function '...' selected for automatic inline expansion
+#pragma warning(disable : 4710) // function '...' not inlined
 
 #include "cpuload.h"
 
@@ -78,24 +90,25 @@ LPWSTR StringAllocW(PWCHAR *dest, LPCWSTR src);
 VOID FreeFileInfoStructs(PFILEINFO fi);
 PFILEINFO CreateFileInfoStruct(PFILEINFO *fi);
 
-// VOID MsgBox(LPCTSTR);
+VOID MsgBox(LPCTSTR);
 
 BOOL WINAPI HandlerRoutine(DWORD);
 HWND GetConsoleHandle(VOID);
 VOID ShowFileType(HANDLE);
-int ShowHelp(VOID);
+UINT ShowHelp(VOID);
 VOID ShowPipeInfo(HANDLE h);
 VOID ConfigStdIn(HANDLE h);
 PWSTR CreateFullPathW(PWSTR szPath);
 
-// DWORD GetWinVer(VOID);
+BOOL IsSupportedWindowsVersion();
 DWORD GetFormattedDateTimeA(PCHAR lpBuf, BOOL bDate, BOOL bTime);
 DWORD GetFormattedDateTimeW(PWCHAR lpBuf, BOOL bDate, BOOL bTime);
-BOOL IsAnOutputConsoleDevice(HANDLE h);
 DWORD GetParentProcessId(VOID);
 HANDLE GetPipedProcessHandle(VOID);
 
-int FormatElapsedTime(LARGE_INTEGER *elapsedTime, PCHAR outBuf, const int outBufSize);
+BOOL IsAnOutputConsoleDevice(HANDLE h);
+
+int FormatElapsedTime(LARGE_INTEGER *elapsedTime, PCHAR outBuf, const size_t outBufSize);
 
 // perr.cpp
 DWORD Perror(DWORD dwErrNum);

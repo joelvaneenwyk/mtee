@@ -35,39 +35,37 @@ https://connect.microsoft.com/VisualStudio/feedback/details/2640071/30-s-delay-a
 
 DWORD dwCtrlEvent; // set by ctrl handler
 
-int main(VOID)
+int tee(ARGS *args)
 {
-    PCHAR lpBuf = NULL;              // pointer to main input buffer
-    PCHAR lpAnsiBuf = NULL;          // pointer to buffer for converting unicode to ansi
-    PWCHAR lpUnicodeBuf = NULL;      // pointer to buffer for converting ansi to unicode
+    PCHAR lpBuf = nullptr;           // pointer to main input buffer
+    PCHAR lpAnsiBuf = nullptr;       // pointer to buffer for converting unicode to ansi
+    PWCHAR lpUnicodeBuf = nullptr;   // pointer to buffer for converting ansi to unicode
     DWORD dwBytesRead = 0L;          // bytes read from input
-    HANDLE hOut = NULL;              // handle to stdout
-    HANDLE hIn = NULL;               // handle to stdin
+    HANDLE hOut = nullptr;           // handle to stdout
+    HANDLE hIn = nullptr;            // handle to stdin
     DWORD dwStdInType = (DWORD)NULL; // stdin's filetype (file/pipe/console)
-    PFILEINFO fi = NULL;             // pointer for indexing FILEINFO records
+    PFILEINFO fi = nullptr;          // pointer for indexing FILEINFO records
     BOOL bBomFound = FALSE;          // true if BOM found
     BOOL bCtrlHandler = FALSE;
-    ARGS args; // holds commandline arguments/options
     DWORD dwPeekBytesRead = 0L;
     DWORD dwPeekBytesAvailable = 0L;
     DWORD dwPeekBytesUnavailable = 0L;
     DWORD cPeekTimeout = 0L;
-    BYTE byPeekBuf[PEEK_BUF_SIZE]; // holds peeked input for ansi/unicode test
+    BYTE byPeekBuf[PEEK_BUF_SIZE] = {0}; // holds peeked input for ansi/unicode test
     DWORD dwInFormat = OP_ANSI_IN;
     DWORD dwOperation;
     int iFlags;
 
 #ifdef _DEBUG
-    MessageBox(0, L"start", L"mtee", MB_OK);
+    // MessageBox(0, L"start", L"mtee", MB_OK);
 #endif
 
-    /*
-        if(!GetWinVer())
-        {
-            Verbose(TEXT("This program requires Windows NT4, 2000, XP or 2003.\r\n"));
-            ExitProcess(1);
-        }
-    */
+    if (!IsSupportedWindowsVersion())
+    {
+        Verbose(TEXT("This program requires Windows NT4, 2000, XP or 2003.\r\n"));
+        return 1;
+    }
+
     //
     // install ctrl handler to trap ctrl-c and ctrl-break
     //
@@ -77,29 +75,36 @@ int main(VOID)
     //
     // parse the commandline
     //
-    if (!ParseCommandlineW(&args))
-        ExitProcess(1);
+    if (!ParseCommandlineW(args))
+    {
+        return 1;
+    }
 
     //
     // did user want to display helpscreen?
     //
-    if (args.bHelp)
-        ExitProcess(ShowHelp());
+    if (args->bHelp)
+        return ShowHelp();
 
     //
     // get handles to stdout/stdin
     //
     if ((hIn = GetStdHandle(STD_INPUT_HANDLE)) == INVALID_HANDLE_VALUE)
-        ExitProcess(Perror((DWORD)NULL));
-    if ((hOut = GetStdHandle(STD_OUTPUT_HANDLE)) == INVALID_HANDLE_VALUE)
-        ExitProcess(Perror((DWORD)NULL));
+    {
+        return Perror((DWORD)NULL);
+    }
 
-    args.fi.hFile = hOut;
+    if ((hOut = GetStdHandle(STD_OUTPUT_HANDLE)) == INVALID_HANDLE_VALUE)
+    {
+        return Perror((DWORD)NULL);
+    }
+
+    args->fi.hFile = hOut;
 
     //
     // determine whether the output is a console
     //
-    args.fi.bIsConsole = IsAnOutputConsoleDevice(hOut);
+    args->fi.bIsConsole = IsAnOutputConsoleDevice(hOut);
 
     //
     // determine the type of input file then peek at content to ascertain if it's unicode
@@ -109,8 +114,8 @@ int main(VOID)
     //
     // if requested by user, get handle to piped process
     //
-    HANDLE hPipedProcess = NULL;
-    if (args.bFwdExitCode)
+    HANDLE hPipedProcess = nullptr;
+    if (args->bFwdExitCode)
         hPipedProcess = GetPipedProcessHandle();
 
     switch (dwStdInType)
@@ -129,41 +134,41 @@ int main(VOID)
             dwFileSizeAtLeast = 0xFFFFFFFE;
         if (dwFileSizeAtLeast == 0xFFFFFFFF && GetLastError() != NO_ERROR)
         {
-            if (!args.bContinue)
-                ExitProcess(Perror((DWORD)NULL));
+            if (!args->bContinue)
+                return Perror((DWORD)NULL);
             else
                 dwFileSizeAtLeast = 0L;
         }
         //
-        // only try and peek if there's at least a wchar available otherwise a test for
-        // unicode is meaningless
+        // Only try and peek if there's at least a wchar available otherwise a test for
+        // unicode is meaningless.
         //
         if (dwFileSizeAtLeast >= sizeof(WCHAR))
         {
             if (!ReadFile(
                     hIn, byPeekBuf, dwFileSizeAtLeast < sizeof(byPeekBuf) ? dwFileSizeAtLeast : sizeof(byPeekBuf),
-                    &dwPeekBytesRead, NULL))
+                    &dwPeekBytesRead, nullptr))
             {
                 //
                 // if failed and if i/o errors not being ignored then quit
                 //
-                if (!args.bContinue)
-                    ExitProcess(Perror((DWORD)NULL));
+                if (!args->bContinue)
+                    return Perror((DWORD)NULL);
                 else
                     break;
             }
             //
-            // reset the filepointer to beginning
+            // reset the file pointer to beginning
             //
-            if (SetFilePointer(hIn, (LONG)NULL, NULL, FILE_BEGIN) && (!args.bContinue))
-                ExitProcess(Perror((DWORD)NULL));
+            if (SetFilePointer(hIn, (LONG)NULL, nullptr, FILE_BEGIN) && (!args->bContinue))
+                return Perror((DWORD)NULL);
         }
     }
     break;
     case FILE_TYPE_CHAR:
         // stdin from NUL, CON, CONIN$, AUX or COMx
         // if AUX or COMx, then quit without creating any files (not even zero byte files)
-        args.dwBufSize = 1;
+        args->dwBufSize = 1;
         {
             DWORD dwInMode;
             if (!GetConsoleMode(hIn, &dwInMode)) // fails (err 6) if NUL, COMx, AUX
@@ -171,12 +176,12 @@ int main(VOID)
                 COMMTIMEOUTS CommTimeouts;
                 // suceeds if AUX or COMx so quit (allow NUL)
                 if (GetCommTimeouts(hIn, &CommTimeouts))
-                    ExitProcess(ERROR_SUCCESS);
+                    return ERROR_SUCCESS;
             }
         }
         break;
     case FILE_TYPE_PIPE: // stdin is from pipe, prn or lpt1
-        while ((!dwPeekBytesRead) && (cPeekTimeout < args.dwPeekTimeout) && (dwCtrlEvent == CTRL_CLEAR_EVENT))
+        while ((!dwPeekBytesRead) && (cPeekTimeout < args->dwPeekTimeout) && (dwCtrlEvent == CTRL_CLEAR_EVENT))
         {
             if (!PeekNamedPipe(
                     hIn,                      // handle to pipe to copy from
@@ -187,7 +192,7 @@ int main(VOID)
                     &dwPeekBytesUnavailable)) // pointer to unread bytes in this message
             {
                 if (GetLastError() != ERROR_BROKEN_PIPE)
-                    ExitProcess(Perror((DWORD)NULL));
+                    return Perror((DWORD)NULL);
             }
             Sleep(PEEK_WAIT_INT);
             cPeekTimeout += PEEK_WAIT_INT;
@@ -199,28 +204,31 @@ int main(VOID)
     // open/create all the files after checking stdin, that way if there was an error then
     // zero byte files are not created
     //
-    fi = args.fi.fiNext;
+    fi = args->fi.fiNext;
     while (fi)
     {
         fi->hFile = CreateFileW(
-            args.bIntermediate ? CreateFullPathW(fi->lpFileName) : fi->lpFileName,
+            args->bIntermediate ? CreateFullPathW(fi->lpFileName) : fi->lpFileName,
             GENERIC_WRITE,   // we definitely need write access
             FILE_SHARE_READ, // allow others to open file for read
-            NULL,            // security attr - no thanks
+            nullptr,         // security attr - no thanks
             OPEN_ALWAYS,     // creation disposition - we always want to open or append
             0,               // flags & attributes - gulp! have you seen the documentation?
-            NULL             // handle to a template? yer right
+            nullptr          // handle to a template? yer right
         );
-        if ((fi->hFile == INVALID_HANDLE_VALUE) && !args.bContinue)
-            ExitProcess(Perror((DWORD)NULL));
+
+        if ((fi->hFile == INVALID_HANDLE_VALUE) && !args->bContinue)
+            return Perror((DWORD)NULL);
+
         //
-        // if appending set filepointer to eof
+        // If appending set file pointer to EOF.
         //
         if (fi->bAppend)
         {
-            if ((SetFilePointer(fi->hFile, (LONG)NULL, NULL, FILE_END) == INVALID_SET_FILE_POINTER) && !args.bContinue)
+            if ((SetFilePointer(fi->hFile, (LONG)NULL, nullptr, FILE_END) == INVALID_SET_FILE_POINTER) &&
+                !args->bContinue)
             {
-                ExitProcess(Perror((DWORD)NULL));
+                return Perror((DWORD)NULL);
             }
         }
 
@@ -243,8 +251,8 @@ int main(VOID)
             case ERROR_INVALID_PARAMETER: // PRN device
                 break;
             default:
-                if (!args.bContinue)
-                    ExitProcess(Perror((DWORD)NULL));
+                if (!args->bContinue)
+                    return Perror((DWORD)NULL);
             }
         }
 
@@ -270,7 +278,7 @@ int main(VOID)
         else
         {
             iFlags = IS_TEXT_UNICODE_NULL_BYTES;
-            IsTextUnicode(byPeekBuf, dwPeekBytesRead, &iFlags);
+            IsTextUnicode(byPeekBuf, (int)dwPeekBytesRead, &iFlags);
             if (iFlags & IS_TEXT_UNICODE_NULL_BYTES)
             {
                 dwInFormat = OP_UNICODE_IN;
@@ -283,13 +291,13 @@ int main(VOID)
     //
     // allocate the main I/O buffer
     //
-    lpBuf = (PCHAR)HeapAlloc(GetProcessHeap(), 0, args.dwBufSize * sizeof(CHAR));
+    lpBuf = (PCHAR)HeapAlloc(GetProcessHeap(), 0, args->dwBufSize * sizeof(CHAR));
     if (!lpBuf)
-        ExitProcess(Perror((DWORD)NULL));
+        return Perror((DWORD)NULL);
 
-    if (args.bAnsi)
+    if (args->bAnsi)
         dwOperation = (dwInFormat | OP_ANSI_OUT);
-    else if (args.bUnicode)
+    else if (args->bUnicode)
         dwOperation = (dwInFormat | OP_UNICODE_OUT);
     else
         dwOperation = dwInFormat | (dwInFormat << OP_IN_OUT_SHIFT);
@@ -299,43 +307,43 @@ int main(VOID)
     //
     if (bBomFound)
     {
-        if (!ReadFile(hIn, lpBuf, sizeof(WCHAR), &dwBytesRead, NULL))
+        if (!ReadFile(hIn, lpBuf, sizeof(WCHAR), &dwBytesRead, nullptr))
         {
             if (GetLastError() != ERROR_BROKEN_PIPE)
-                ExitProcess(Perror((DWORD)NULL));
+                return Perror((DWORD)NULL);
         }
     }
     //
     // if output is unicode and user specified unicode conversion, write BOM to files (but not to the std output)
     //
-    if ((dwOperation & OP_UNICODE_OUT) && args.bUnicode)
+    if ((dwOperation & OP_UNICODE_OUT) && args->bUnicode)
     {
-        if (!WriteBom(args.fi.fiNext, args.bContinue))
+        if (!WriteBom(args->fi.fiNext, args->bContinue))
         {
-            if (!args.bContinue)
-                ExitProcess(Perror((DWORD)NULL));
+            if (!args->bContinue)
+                return Perror((DWORD)NULL);
         }
     }
 
-    LARGE_INTEGER startTimestamp = {0};
-    LARGE_INTEGER endTimestamp = {0};
-    LARGE_INTEGER elapsedTime = {0};
-    LARGE_INTEGER frequency = {0};
+    LARGE_INTEGER startTimestamp = {{0}};
+    LARGE_INTEGER endTimestamp = {{0}};
+    LARGE_INTEGER elapsedTime = {{0}};
+    LARGE_INTEGER frequency = {{0}};
 
-    if (args.bElapsedTime)
+    if (args->bElapsedTime)
     {
         (void)QueryPerformanceFrequency(&frequency);
         (void)QueryPerformanceCounter(&startTimestamp);
     }
 
     unsigned long long nSamples = 0;
-    double accumulatedCpuLoad = 0.0f;
+    double accumulatedCpuLoad = 0.0;
 
     cpuLoadInit();
 
     for (;;)
     {
-        double currentCpuLoad = 0.0f;
+        double currentCpuLoad = 0.0;
         BOOL rc = cpuLoadGetCurrentCpuLoad(&currentCpuLoad);
 
         if (rc)
@@ -344,7 +352,7 @@ int main(VOID)
             accumulatedCpuLoad += currentCpuLoad;
         }
 
-        if (!ReadFile(hIn, lpBuf, args.dwBufSize * sizeof(CHAR), &dwBytesRead, NULL))
+        if (!ReadFile(hIn, lpBuf, args->dwBufSize * sizeof(CHAR), &dwBytesRead, nullptr))
         {
             if (GetLastError() != ERROR_BROKEN_PIPE)
             {
@@ -359,7 +367,7 @@ int main(VOID)
             break;
         if (dwOperation == OP_ANSI_IN_ANSI_OUT)
         {
-            if (!WriteBufferToConsoleAndFilesA(&args, lpBuf, dwBytesRead, args.bAddDate, args.bAddTime))
+            if (!WriteBufferToConsoleAndFilesA(args, lpBuf, dwBytesRead, args->bAddDate, args->bAddTime))
             {
                 Perror((DWORD)NULL);
                 break;
@@ -368,7 +376,7 @@ int main(VOID)
         else if (dwOperation == OP_UNICODE_IN_UNICODE_OUT)
         {
             if (!WriteBufferToConsoleAndFilesW(
-                    &args, (PWCHAR)lpBuf, dwBytesRead / sizeof(WCHAR), args.bAddDate, args.bAddTime))
+                    args, (PWCHAR)lpBuf, dwBytesRead / sizeof(WCHAR), args->bAddDate, args->bAddTime))
             {
                 Perror((DWORD)NULL);
                 break;
@@ -377,7 +385,7 @@ int main(VOID)
         else if (dwOperation == OP_ANSI_IN_UNICODE_OUT)
         {
             AnsiToUnicode(&lpUnicodeBuf, lpBuf, &dwBytesRead);
-            if (!WriteBufferToConsoleAndFilesW(&args, (PWCHAR)lpUnicodeBuf, dwBytesRead, args.bAddDate, args.bAddTime))
+            if (!WriteBufferToConsoleAndFilesW(args, (PWCHAR)lpUnicodeBuf, dwBytesRead, args->bAddDate, args->bAddTime))
             {
                 Perror((DWORD)NULL);
                 break;
@@ -387,7 +395,7 @@ int main(VOID)
         {
             UnicodeToAnsi(&lpAnsiBuf, (PWCHAR)lpBuf, &dwBytesRead);
             if (!WriteBufferToConsoleAndFilesA(
-                    &args, lpAnsiBuf, dwBytesRead / sizeof(WCHAR), args.bAddDate, args.bAddTime))
+                    args, lpAnsiBuf, dwBytesRead / sizeof(WCHAR), args->bAddDate, args->bAddTime))
             {
                 Perror((DWORD)NULL);
                 break;
@@ -395,11 +403,10 @@ int main(VOID)
         }
     }
 
-    if (args.bElapsedTime)
+    if (args->bElapsedTime)
     {
         char strElapsedTime[128];
-        int strLen = 0;
-        memset(strElapsedTime, 0x00, sizeof(strElapsedTime));
+        memset(strElapsedTime, 0, sizeof(strElapsedTime));
 
         (void)QueryPerformanceCounter(&endTimestamp);
 
@@ -407,25 +414,24 @@ int main(VOID)
         elapsedTime.QuadPart *= 1000000L;
         elapsedTime.QuadPart /= frequency.QuadPart;
 
-        strLen = FormatElapsedTime(&elapsedTime, strElapsedTime, sizeof(strElapsedTime));
-        WriteBufferToConsoleAndFilesA(&args, strElapsedTime, strLen, FALSE, FALSE);
+        int strLen = FormatElapsedTime(&elapsedTime, strElapsedTime, sizeof(strElapsedTime));
+        WriteBufferToConsoleAndFilesA(args, strElapsedTime, (DWORD)strLen, FALSE, FALSE);
     }
 
-    if (args.bMeasureCPUUsage)
+    if (args->bMeasureCPUUsage)
     {
         char cpuLoadStr[128];
-        int cpuLoadStrlen = 0;
-        double averageCpuLoad = (accumulatedCpuLoad / (float)nSamples);
+        double averageCpuLoad = (accumulatedCpuLoad / (double)nSamples);
+        DWORD cpuLoadStrlen =
+            (DWORD)snprintf(cpuLoadStr, sizeof(cpuLoadStr), "CPU Load (avg.) = %5.2f\n", averageCpuLoad);
 
-        cpuLoadStrlen = snprintf(cpuLoadStr, sizeof(cpuLoadStr), "CPU Load (avg.) = %5.2f\n", averageCpuLoad);
-
-        WriteBufferToConsoleAndFilesA(&args, cpuLoadStr, cpuLoadStrlen, FALSE, FALSE);
+        WriteBufferToConsoleAndFilesA(args, cpuLoadStr, cpuLoadStrlen, FALSE, FALSE);
     }
 
     //
     // close all open files (not the first entry that contains the std output)
     //
-    fi = args.fi.fiNext;
+    fi = args->fi.fiNext;
     while (fi)
     {
         if (fi->hFile != INVALID_HANDLE_VALUE)
@@ -441,13 +447,30 @@ int main(VOID)
     //
     // if requested by user, get exit code of piped process
     //
-    if (args.bFwdExitCode)
+    if (args->bFwdExitCode)
     {
         GetExitCodeProcess(hPipedProcess, &dwExitCode);
         CloseHandle(hPipedProcess);
     }
+
+    FreeFileInfoStructs(&args->fi);
+
     //
     // Use ExitProcess (instead of return) to workaround an issue in Windows 10
     //
-    ExitProcess(dwExitCode);
+    return dwExitCode;
+}
+
+int fuzz()
+{
+    ARGS args;
+    return tee(&args);
+}
+
+int main(int argc, char **argv)
+{
+    // holds commandline arguments/options
+    ARGS args;
+    int result = tee(&args);
+    ExitProcess(result);
 }

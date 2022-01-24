@@ -1,6 +1,6 @@
 #include "header.h"
 
-#define MAX_DATE_TIME_LEN (25)
+constexpr int MAX_DATE_TIME_LEN = 25;
 
 BOOL WriteBufferToConsoleAndFilesA(LPARGS args, PCHAR lpBuf, DWORD dwCharsRead, BOOL AddDate, BOOL AddTime)
 {
@@ -42,9 +42,9 @@ BOOL WriteBufferToConsoleAndFilesA(LPARGS args, PCHAR lpBuf, DWORD dwCharsRead, 
             {
                 BOOL ok;
                 if (fi->bIsConsole)
-                    ok = WriteConsoleA(fi->hFile, lpBuf, dwCharsRead, &dwBytesWritten, NULL);
+                    ok = WriteConsoleA(fi->hFile, lpBuf, dwCharsRead, &dwBytesWritten, nullptr);
                 else
-                    ok = WriteFile(fi->hFile, lpBuf, dwCharsRead, &dwBytesWritten, NULL);
+                    ok = WriteFile(fi->hFile, lpBuf, dwCharsRead, &dwBytesWritten, nullptr);
                 if (!ok && !args->bContinue)
                     return FALSE;
             }
@@ -97,9 +97,9 @@ BOOL WriteBufferToConsoleAndFilesW(LPARGS args, PWCHAR lpBuf, DWORD dwCharsRead,
                     // The ANSI version perhaps works identically to WriteFile, however in UNICODE version
                     // WriteConsoleW is definitely needed so that it understands that we are outputting UNICODE
                     // characters
-                    ok = WriteConsoleW(fi->hFile, lpBuf, dwCharsRead, &dwBytesWritten, NULL);
+                    ok = WriteConsoleW(fi->hFile, lpBuf, dwCharsRead, &dwBytesWritten, nullptr);
                 else
-                    ok = WriteFile(fi->hFile, lpBuf, dwCharsRead * sizeof(WCHAR), &dwBytesWritten, NULL);
+                    ok = WriteFile(fi->hFile, lpBuf, dwCharsRead * sizeof(WCHAR), &dwBytesWritten, nullptr);
                 if (!ok && !args->bContinue)
                     return FALSE;
             }
@@ -111,26 +111,25 @@ BOOL WriteBufferToConsoleAndFilesW(LPARGS args, PWCHAR lpBuf, DWORD dwCharsRead,
 
 BOOL AnsiToUnicode(PWCHAR *lpDest, PCHAR lpSrc, LPDWORD lpSize)
 {
-    int iWideCharLen;
     if (*lpDest)
     {
         if (!HeapFree(GetProcessHeap(), 0, *lpDest))
             return FALSE;
     }
 
-    iWideCharLen = MultiByteToWideChar(GetConsoleCP(), 0, lpSrc, *lpSize, NULL, 0);
+    int iWideCharLen = MultiByteToWideChar(GetConsoleCP(), 0, lpSrc, (int)*lpSize, nullptr, 0);
 
     // temp change RE lienhart post
     // iWideCharLen = MultiByteToWideChar(CP_ACP, 0, lpSrc, *lpSize, NULL, 0);
 
-    *lpDest = (PWCHAR)HeapAlloc(GetProcessHeap(), 0, iWideCharLen * sizeof(WCHAR));
-    if (lpDest == NULL)
+    *lpDest = (PWCHAR)HeapAlloc(GetProcessHeap(), 0, (size_t)iWideCharLen * sizeof(WCHAR));
+    if (lpDest == nullptr)
         return FALSE;
     //
     // set lpsize to number of chars
     //
 
-    *lpSize = MultiByteToWideChar(GetConsoleCP(), 0, lpSrc, *lpSize, *lpDest, iWideCharLen);
+    *lpSize = (DWORD)MultiByteToWideChar(GetConsoleCP(), 0, lpSrc, (int)*lpSize, *lpDest, iWideCharLen);
 
     // temp change RE lienhart post
     //*lpSize = MultiByteToWideChar(CP_ACP, 0, lpSrc, *lpSize, *lpDest, iWideCharLen);
@@ -140,18 +139,18 @@ BOOL AnsiToUnicode(PWCHAR *lpDest, PCHAR lpSrc, LPDWORD lpSize)
 
 BOOL UnicodeToAnsi(PCHAR *lpDest, PWCHAR lpSrc, LPDWORD lpSize)
 {
-    int iAnsiCharLen;
     if (*lpDest)
     {
         if (!HeapFree(GetProcessHeap(), 0, *lpDest))
             return FALSE;
     }
-    iAnsiCharLen = WideCharToMultiByte(GetConsoleCP(), 0, lpSrc, *lpSize, NULL, 0, NULL, NULL);
-    *lpDest = (PCHAR)HeapAlloc(GetProcessHeap(), 0, iAnsiCharLen * sizeof(WCHAR));
-    if (lpDest == NULL)
+    
+    int iAnsiCharLen = WideCharToMultiByte(GetConsoleCP(), 0, lpSrc, (int)*lpSize, nullptr, 0, nullptr, nullptr);
+    *lpDest = (PCHAR)HeapAlloc(GetProcessHeap(), 0, (size_t)iAnsiCharLen * sizeof(WCHAR));
+    if (lpDest == nullptr)
         return FALSE;
 
-    *lpSize = WideCharToMultiByte(GetConsoleCP(), 0, lpSrc, *lpSize, *lpDest, iAnsiCharLen, NULL, NULL);
+    *lpSize = (DWORD)WideCharToMultiByte(GetConsoleCP(), 0, lpSrc, (int)*lpSize, *lpDest, iAnsiCharLen, nullptr, nullptr);
 
     // temp change RE lienhart post CP_ACP
     //*lpSize = WideCharToMultiByte(CP_ACP, 0, lpSrc, *lpSize, *lpDest, iAnsiCharLen, NULL, NULL);
@@ -169,7 +168,7 @@ BOOL WriteBom(PFILEINFO fi, BOOL bContinue)
         DWORD siz = GetFileSize(fi->hFile, &dwFileSizeHigh);
         if ((fi->hFile != INVALID_HANDLE_VALUE) && (siz == 0 && dwFileSizeHigh == 0))
         {
-            if (!WriteFile(fi->hFile, &wcBom, sizeof(WCHAR), &dwBytesWritten, NULL))
+            if (!WriteFile(fi->hFile, &wcBom, sizeof(WCHAR), &dwBytesWritten, nullptr))
             {
                 if (!bContinue)
                     return FALSE;

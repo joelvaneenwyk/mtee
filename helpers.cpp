@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// 
 // CreateFullPathW creates the directory structure pointed to by szPath
 // It creates everything upto the last backslash. For example:-
 // c:\dir1\dir2\ <-- creates dir1 and dir2
@@ -17,7 +18,6 @@
 // "\\?\UNC\<server>\<share>".
 //
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 PWSTR CreateFullPathW(PWSTR szPath)
 {
     PWCHAR p = szPath;
@@ -34,20 +34,12 @@ PWSTR CreateFullPathW(PWSTR szPath)
     return szPath;
 }
 
-/*
 VOID MsgBox(LPCTSTR msg)
 {
-    MessageBox
-    (
-        NULL,
-        msg,
-        TEXT("MTEE BETA"),
-        MB_OK | MB_SETFOREGROUND
-    );
+    MessageBox(NULL, msg, TEXT("MTEE BETA"), MB_OK | MB_SETFOREGROUND);
 }
-*/
 
-/*ID ShowFileType(HANDLE h)
+VOID ShowFileType(HANDLE h)
 {
     DWORD dwHndType;
     dwHndType = GetFileType(h);
@@ -69,59 +61,54 @@ VOID MsgBox(LPCTSTR msg)
     }
 }
 
-*/
-/*DWORD GetWinVer(VOID)
+BOOL IsSupportedWindowsVersion()
 {
-    OSVERSIONINFO os;
-    os.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
-    DWORD myVersion;
+    OSVERSIONINFOEX osvi;
+    DWORDLONG dwlConditionMask = 0;
+    int op = VER_GREATER_EQUAL;
 
-    if(!GetVersionEx(&os)) return 0;
+    // Initialize the OSVERSIONINFOEX structure.
 
-    if(os.dwPlatformId != VER_PLATFORM_WIN32_NT) myVersion = VER_PRE_NT4;
-    else
-    {
-        switch(os.dwMajorVersion)
-        {
-            case 3:  myVersion = VER_PRE_NT4; break;
-            case 4:  myVersion = VER_NT4;     break;
-            default: myVersion = VER_2000;
-        }
-    }
+    ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+    osvi.dwMajorVersion = 5;
+    osvi.dwMinorVersion = 1;
+    osvi.wServicePackMajor = 2;
+    osvi.wServicePackMinor = 0;
 
-    if(myVersion == VER_2000)
-    {
-        switch(os.dwMinorVersion)
-        {
-            case 0:  myVersion = VER_2000; break;
-            case 1:  myVersion = VER_XP;   break;
-            default: myVersion = VER_2003;
-        }
-    }
+    // Initialize the condition mask.
 
-    return myVersion;
+    VER_SET_CONDITION(dwlConditionMask, VER_MAJORVERSION, op);
+    VER_SET_CONDITION(dwlConditionMask, VER_MINORVERSION, op);
+    VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMAJOR, op);
+    VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMINOR, op);
+
+    // Perform the test.
+
+    return VerifyVersionInfo(
+        &osvi,
+        VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR, dwlConditionMask);
 }
-*/
-/*
-         dwPlatFormID  dwMajorVersion  dwMinorVersion  dwBuildNumber  GetWinVer()
-95             1              4               0             950            0
-95 SP1         1              4               0        >950 && <=1080      0
-95 OSR2        1              4             <10           >1080            0
-98             1              4              10            1998            0
-98 SP1         1              4              10       >1998 && <2183       0
-98 SE          1              4              10          >=2183            0
-ME             1              4              90            3000            0
 
-NT 3.51        2              3              51                            0
-NT 4           2              4               0            1381            1
-
-2000           2              5               0            2195            2
-XP             2              5               1            xxxx            3
-2003*          2              5               2            xxxx            4
-
-CE             3                                                           0
-*/
-
+//----------------------------------------------------------------------------
+//          dwPlatFormID  dwMajorVersion  dwMinorVersion  dwBuildNumber  GetWinVer()
+// 95             1              4               0             950            0
+// 95 SP1         1              4               0        >950 && <=1080      0
+// 95 OSR2        1              4             <10           >1080            0
+// 98             1              4              10            1998            0
+// 98 SP1         1              4              10       >1998 && <2183       0
+// 98 SE          1              4              10          >=2183            0
+// ME             1              4              90            3000            0
+//
+// NT 3.51        2              3              51                            0
+// NT 4           2              4               0            1381            1
+//
+// 2000           2              5               0            2195            2
+// XP             2              5               1            xxxx            3
+// 2003*          2              5               2            xxxx            4
+//
+// CE             3                                                           0
+//
 //----------------------------------------------------------------------------
 DWORD GetFormattedDateTimeA(PCHAR lpBuf, BOOL bDate, BOOL bTime)
 {
@@ -161,20 +148,6 @@ DWORD GetFormattedDateTimeW(PWCHAR lpBuf, BOOL bDate, BOOL bTime)
     return dwSize; // return characters written, not bytes
 }
 
-// determine whether the output is a console
-// this is hard. I first tried to use GetConsoleMode but it returns FALSE in case: mtee > con
-BOOL IsAnOutputConsoleDevice(HANDLE h)
-{
-    if (GetFileType(h) == FILE_TYPE_CHAR)
-    {
-        // CON, NUL, ...
-        DWORD dwBytesWritten;
-        if (WriteConsoleA(h, "", 0, &dwBytesWritten, NULL))
-            return TRUE;
-    }
-    return FALSE;
-}
-
 DWORD GetParentProcessId(VOID)
 {
     DWORD ppid = 0, pid = GetCurrentProcessId();
@@ -200,11 +173,16 @@ DWORD GetParentProcessId(VOID)
             }
         } while (Process32Next(hSnapshot, &pe));
     }
-    CloseHandle(hSnapshot);
+
+    if (hSnapshot)
+    {
+        CloseHandle(hSnapshot);
+    }
+
     return ppid;
 }
 
-static DWORD getActualNumberOfConsoleProcesses(VOID)
+static inline DWORD GetActualNumberOfConsoleProcesses(VOID)
 {
     DWORD dummyProcessId;
     DWORD numberOfProcesses;
@@ -219,7 +197,7 @@ HANDLE GetPipedProcessHandle(VOID)
     //
     // returns a handle to the process piped into mtee
     //
-    DWORD dwProcCount = 0;
+    size_t dwProcCount = 0;
     DWORD *lpdwProcessList;
     HANDLE hPipedProcess = INVALID_HANDLE_VALUE;
 
@@ -227,54 +205,73 @@ HANDLE GetPipedProcessHandle(VOID)
     // get an array of PIDs attached to this console
     //
 
-    dwProcCount = getActualNumberOfConsoleProcesses();
+    dwProcCount = GetActualNumberOfConsoleProcesses();
     lpdwProcessList = (DWORD *)malloc(dwProcCount * sizeof(DWORD));
     if (NULL != lpdwProcessList && dwProcCount > 0)
     {
-        dwProcCount = GetConsoleProcessList(lpdwProcessList, dwProcCount);
+        DWORD dwActualProcCount = GetConsoleProcessList(lpdwProcessList, (DWORD)dwProcCount);         
+        if (dwActualProcCount <= dwProcCount)
+        {
+            // in tests it __appears__ array element 0 is this PID, element 1 is process
+            // piped into mtee, and last element is cmd.exe. if more than one pipe used,
+            // element 2 is next process to rhe left:
+            // eg A | B | C | mtee /e ==> lpdwProcessList[mtee][A][B][C][cmd]
+            //
+            // find the first PID that is not this PID and not parent PID.
+            //
+            DWORD ppid = GetParentProcessId();
+            DWORD cpid = GetCurrentProcessId();
+            for (DWORD dw = 0; dw < dwProcCount; dw++)
+            {
+                DWORD pid = lpdwProcessList[dw];
+                if (pid != cpid && pid != ppid)
+                {
+                    HANDLE Handle = OpenProcess(
+                        PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, lpdwProcessList[dw]);
+                    if (INVALID_HANDLE_VALUE != Handle)
+                    {
+                        hPipedProcess = Handle;
+                        break;
+                    }
+                }
+            }        
+        }
     }
     else
     {
-        return INVALID_HANDLE_VALUE;
-    }
-
-    // in tests it __appears__ array element 0 is this PID, element 1 is process
-    // piped into mtee, and last element is cmd.exe. if more than one pipe used,
-    // element 2 is next process to rhe left:
-    // eg A | B | C | mtee /e ==> lpdwProcessList[mtee][A][B][C][cmd]
-    //
-    // find the first PID that is not this PID and not parent PID.
-    //
-    DWORD ppid = GetParentProcessId();
-    DWORD cpid = GetCurrentProcessId();
-    for (DWORD dw = 0; dw < dwProcCount; dw++)
-    {
-        if ((cpid != lpdwProcessList[dw]) && (ppid != lpdwProcessList[dw]))
-        {
-            HANDLE Handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, lpdwProcessList[dw]);
-            if (INVALID_HANDLE_VALUE != Handle)
-            {
-                hPipedProcess = Handle;
-                break;
-            }
-        }
+        hPipedProcess = INVALID_HANDLE_VALUE;
     }
 
     free(lpdwProcessList);
+
     return hPipedProcess;
 }
 
-int FormatElapsedTime(LARGE_INTEGER *elapsedTime, PCHAR outBuf, const int outBufSize)
+// determine whether the output is a console
+// this is hard. I first tried to use GetConsoleMode but it returns FALSE in case: mtee > con
+BOOL IsAnOutputConsoleDevice(HANDLE h)
 {
-    int h = 0;
-    int m = 0;
+    if (GetFileType(h) == FILE_TYPE_CHAR)
+    {
+        // CON, NUL, ...
+        DWORD dwBytesWritten;
+        if (WriteConsoleA(h, "", 0, &dwBytesWritten, NULL))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+int FormatElapsedTime(LARGE_INTEGER *elapsedTime, PCHAR outBuf, const size_t outBufSize)
+{
+    unsigned int h = 0;
+    unsigned int m = 0;
     int len = 0;
 
     float s = float(elapsedTime->QuadPart / 1000000);
-    m = (int)(s / 60.0);
-    s = s - 60 * m;
+    m = (unsigned int)(s / 60.0);
+    s = s - 60.0f * (float)m;
 
-    h = (int)((float)m / 60.0);
+    h = (unsigned int)((float)m / 60.0);
     m = m - 60 * h;
 
     len = snprintf(outBuf, outBufSize, "Elapsed time: %02dh%02dm%06.3fs\n", h, m, s);

@@ -470,7 +470,8 @@ int fuzz()
 int main(int argc, char **argv)
 {
     // holds commandline arguments/options
-    ARGS args;
-    int result = tee(&args);
-    ExitProcess(result);
+    // ARGS args;
+    // int result = tee(&args);
+    // ExitProcess(result);
+    return 0;
 }

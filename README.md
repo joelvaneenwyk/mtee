@@ -114,10 +114,6 @@ How can I determine the exit code of the process piped into Mtee?
 
 > Update `mtee` to at least version v2.21 and use the `/E` option.
 
-## Screenshots<a name="screenshots"></a>
-
-![Screenshot of Mtee](resources/mtee-screenshot.png)
-
 ## CPU Load<a name="cpu-load"></a>
 
 The CPU load calculations are based in the information from the ```GetSystemTimes``` Windows API.
@@ -139,6 +135,12 @@ Revision | Date | Changes
 2.2 | 2016-06-10 | Credit to Jari Kulmala for implementing workaround to avoid possible bug in Windows 10 where program takes 30 seconds to exit.
 2.1 | 2013-03-01 | Mtee is now open source software released under the MIT License. Credit to Jari Kulmala for addressing the following:-<ul><li>mtee is now Windows 8 compatible</li><li>mtee assumed all files < 4GB</li><li>echo "t013\|mtee /u con" entered a continuous loop</li><li>"echo x x x x \| mtee" caused mtee to guess input was unicode</li><li>redirection to console and con device as output file was not supported</li></ul>
 2.0 | 2003-08-27 | The following features are new to Mtee v2.0:-<ul><li>Read and output unicode</li><li>Convert ANSI to unicode (and vice-versa)</li><li>Reads text and binary data without performing any character translations</li><li>Support for unicode filenames of ~32,000 characters</li><li>Smaller than ever. Mtee is now just 11kb (and no, it's not compressed!)</li></ul>
+
+## Resources
+
+* [wintee](https://code.google.com/archive/p/wintee/)
+   - Similar project but has not been updated in a long time.
+   - [wintee GitHub fork](https://github.com/WinLAFS/wintee)
 
 ## Copyright and License<a name="copyright-and-license"></a>
 

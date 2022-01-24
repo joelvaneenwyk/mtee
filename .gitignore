@@ -2,6 +2,10 @@
 ## General
 ##
 
+build
+tests/output/
+/*.txt
+
 **/bin/*
 **/obj/*
 *.depend

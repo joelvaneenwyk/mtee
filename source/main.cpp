@@ -592,7 +592,7 @@ int main(int argc, char **argv)
 
     if (argc == 3 && !strcmp(argv[2], "loop"))
     {
-        // loop inside application and call target infinitey
+        // loop inside application and call target infinitely
         while (true)
         {
             test_target(argv[1], argv[0]);

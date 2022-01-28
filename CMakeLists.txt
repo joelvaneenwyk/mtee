@@ -9,6 +9,18 @@ add_executable(mtee
     source/handler.cpp source/help.cpp source/helpers.cpp
     source/main.cpp source/output.cpp source/perr.cpp)
 
+target_include_directories(mtee PUBLIC source)
+target_precompile_headers(mtee PUBLIC source/header.h)
+target_compile_definitions(mtee PUBLIC _CRT_SECURE_NO_WARNINGS)
+
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    target_compile_options(mtee PUBLIC /W4 /WX)
+else()
+    # lots of warnings and all warnings as errors
+    target_compile_options(mtee PUBLIC -Wall -Wextra -pedantic -Werror)
+endif()
+
 install(TARGETS mtee DESTINATION bin)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

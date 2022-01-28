@@ -1,18 +1,21 @@
 ///
-/// `wtee`
-/// 
+/// `mtee`
+///
 /// Copyright (c) 2013 Ritchie Lawrence
-/// 
+///
+
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable : 5039)
 #pragma warning(disable : 4668)
 #pragma warning(disable : 4820)
-#   include <Windows.h>
-#   include <TlHelp32.h>
+#include <Windows.h>
+#include <TlHelp32.h>
+
 #pragma warning(pop)
 
-#pragma warning(disable : 5045)  // Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
+#pragma warning(disable : 5045) // Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
 #pragma warning(disable : 4711) // function '...' selected for automatic inline expansion
 #pragma warning(disable : 4710) // function '...' not inlined
 
@@ -43,7 +46,7 @@
 #define _MERGE_RDATA_
 
 #if !defined(INVALID_SET_FILE_POINTER)
-#   define INVALID_SET_FILE_POINTER ((DWORD)-1)
+#define INVALID_SET_FILE_POINTER ((DWORD)-1)
 #endif
 
 #define CTRL_CLEAR_EVENT (0xFFFF)

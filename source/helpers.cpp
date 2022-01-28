@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// 
+//
 // CreateFullPathW creates the directory structure pointed to by szPath
 // It creates everything upto the last backslash. For example:-
 // c:\dir1\dir2\ <-- creates dir1 and dir2
@@ -44,7 +44,7 @@ VOID ShowFileType(HANDLE h)
     DWORD dwHndType;
     dwHndType = GetFileType(h);
 
-    switch(dwHndType)
+    switch (dwHndType)
     {
     case FILE_TYPE_DISK: // stdin/stdout is redirected from/to disk: app.exe<in>out
         MsgBox(TEXT("FILE_TYPE_DISK"));
@@ -65,10 +65,8 @@ BOOL IsSupportedWindowsVersion()
 {
     OSVERSIONINFOEX osvi;
     DWORDLONG dwlConditionMask = 0;
-    int op = VER_GREATER_EQUAL;
 
     // Initialize the OSVERSIONINFOEX structure.
-
     ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
     osvi.dwMajorVersion = 5;
@@ -77,17 +75,15 @@ BOOL IsSupportedWindowsVersion()
     osvi.wServicePackMinor = 0;
 
     // Initialize the condition mask.
-
+    BYTE op = VER_GREATER_EQUAL;
     VER_SET_CONDITION(dwlConditionMask, VER_MAJORVERSION, op);
     VER_SET_CONDITION(dwlConditionMask, VER_MINORVERSION, op);
     VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMAJOR, op);
     VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMINOR, op);
 
     // Perform the test.
-
     return VerifyVersionInfo(
-        &osvi,
-        VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR, dwlConditionMask);
+        &osvi, VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR, dwlConditionMask);
 }
 
 //----------------------------------------------------------------------------
@@ -209,7 +205,7 @@ HANDLE GetPipedProcessHandle(VOID)
     lpdwProcessList = (DWORD *)malloc(dwProcCount * sizeof(DWORD));
     if (NULL != lpdwProcessList && dwProcCount > 0)
     {
-        DWORD dwActualProcCount = GetConsoleProcessList(lpdwProcessList, (DWORD)dwProcCount);         
+        DWORD dwActualProcCount = GetConsoleProcessList(lpdwProcessList, (DWORD)dwProcCount);
         if (dwActualProcCount <= dwProcCount)
         {
             // in tests it __appears__ array element 0 is this PID, element 1 is process
@@ -226,15 +222,15 @@ HANDLE GetPipedProcessHandle(VOID)
                 DWORD pid = lpdwProcessList[dw];
                 if (pid != cpid && pid != ppid)
                 {
-                    HANDLE Handle = OpenProcess(
-                        PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, lpdwProcessList[dw]);
+                    HANDLE Handle =
+                        OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, lpdwProcessList[dw]);
                     if (INVALID_HANDLE_VALUE != Handle)
                     {
                         hPipedProcess = Handle;
                         break;
                     }
                 }
-            }        
+            }
         }
     }
     else

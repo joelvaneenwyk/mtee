@@ -8,9 +8,10 @@ AlignTrailingComments: 'true'
 AlwaysBreakBeforeMultilineStrings: 'true'
 ColumnLimit: '120'
 KeepEmptyLinesAtTheStartOfBlocks: 'false'
-MaxEmptyLinesToKeep: '2'
+MaxEmptyLinesToKeep: '1'
 SpaceAfterCStyleCast: 'false'
 SpacesInParentheses: 'false'
 TabWidth: '4'
+SortIncludes: false
 
 ...

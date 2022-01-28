@@ -14,9 +14,6 @@ exit /b
     set _tests=%_root%\tests
     cd /D "%_tests%"
 
-    if exist "%_tests%\output" rmdir /s /q "%_tests%\output"
-    mkdir "%_tests%\output"
-
     set _mtee_config=Debug
     set _mtee=%_root%\workspace\x64\%_mtee_config%\mtee.exe
 
@@ -35,9 +32,12 @@ exit /b
     set _target_method=main
     set _target_module=%_mtee%
     set _target_module_name=mtee.exe
-    set _target_offset=0x14EF0
+    set _target_offset=0x126B0
     set _target_args=2
     set _target_iterations=100
+
+    if exist "%_output%" rmdir /s /q "%_output%"
+    mkdir "%_output%"
 
     ::
     :: Use MSBuild to compile `mtee` for the configuration we are testing
@@ -93,50 +93,68 @@ exit /b
     ::
 
     echo ##[cmd] "%_dumpbin%" /all "%_mtee%"
-    "%_dumpbin%" /all "%_mtee%" >"%_tests%\mtee.txt"
+    "%_dumpbin%" /all "%_mtee%" >"%_output%\mtee.txt"
 
     ::
     :: `drrun` Use this to validate that we can instrument the executable
     ::
 
+    set _output_drrun=%_output%\_drrun
+    if exist "%_output_drrun%" rmdir /s /q "%_output_drrun%"
+    mkdir "%_output_drrun%"
+    del "%_tests%\afl.mtee.exe.*" > nul 2>&1
+    del "%_tests%\childpid*.txt" > nul 2>&1
+
     echo ##[cmd] "%_dynamorio_bin%\drrun.exe" --help
-    "%_dynamorio_bin%\drrun.exe" --help >"%_tests%\afl.drrun.txt"
+    "%_dynamorio_bin%\drrun.exe" --help >"%_output_drrun%\afl.drrun.txt"
     set _dr_run=-stats -mem -verbose
     set _dr_run=!_dr_run! -c "%_winafl%"
     set _dr_run=!_dr_run! -debug
-    set _dr_run=!_dr_run! -target_method %_target_method%
     set _dr_run=!_dr_run! -target_module "%_target_module_name%"
-    ::set _dr_run=!_dr_run! -target_offset %_target_offset%
+    set _dr_run=!_dr_run! -target_method %_target_method%
     set _dr_run=!_dr_run! -fuzz_iterations %_target_iterations%
     set _dr_run=!_dr_run! -nargs %_target_args%
 
-    del "%_tests%\afl.mtee.exe.*"
-    del "%_tests%\childpid*.txt"
-    call :Execute "%_dynamorio_bin%\drrun.exe" !_dr_run! -- "%_mtee%"
+    call :Execute "%_dynamorio_bin%\drrun.exe" !_dr_run! -- "%_mtee%" @@
     if errorlevel 1 (
         echo Failed.
         exit /b 1
     )
     echo [SUCCESS] Instrumenting module succeeded.
+    move "%_tests%\afl.mtee.exe.*" "%_output_drrun%" > nul 2>&1
+    move "%_tests%\childpid*.txt" "%_output_drrun%" > nul 2>&1
 
     ::
     :: afl_fuzz
     ::
 
-    set _afl_fuzz_args=-w "%_winafl%" -t 4000 -i "%_input%" -o "%_output%" -D "%_dynamorio_bin%"
-    set _afl_instrumentation=-debug
+    set _output_aflwin=%_output%\_aflwin
+    if exist "%_output_aflwin%" rmdir /s /q "%_output_aflwin%"
+    mkdir "%_output_aflwin%"
+
+    set _afl_fuzz_args=-w "%_winafl%" -t 20000  -i "%_input%" -o "%_output%" -D "%_dynamorio_bin%"
+
+    :: https://github.com/googleprojectzero/winafl/blob/master/readme_dr.md
+    set _afl_instrumentation=
+    set _afl_instrumentation=!_afl_instrumentation! -debug
     set _afl_instrumentation=!_afl_instrumentation! -coverage_module "%_target_module_name%"
     set _afl_instrumentation=!_afl_instrumentation! -target_module "%_target_module_name%"
     set _afl_instrumentation=!_afl_instrumentation! -target_method %_target_method%
     set _afl_instrumentation=!_afl_instrumentation! -nargs %_target_args%
     set _afl_instrumentation=!_afl_instrumentation! -fuzz_iterations %_target_iterations%
-    ::set _afl_instrumentation=!_afl_instrumentation! -target_offset %_target_offset%
+    set _afl_instrumentation=!_afl_instrumentation! -target_offset %_target_offset%
     ::set _afl_instrumentation=!_afl_instrumentation! -call_convention thiscall
-    ::set _afl_instrumentation=!_afl_instrumentation! -covtype edge
+    set _afl_instrumentation=!_afl_instrumentation! -covtype edge
 
-    del "%_tests%\afl.mtee.exe.*"
-    del "%_tests%\childpid*.txt"
-    call :Execute "%_afl_fuzz%" %_afl_fuzz_args% -- !_afl_instrumentation! -- "%_mtee%"
+    del "%_tests%\afl.mtee.exe.*" > nul 2>&1
+    del "%_tests%\childpid*.txt" > nul 2>&1
+
+    ::call :Execute "%_afl_fuzz%" %_afl_fuzz_args% -- !_afl_instrumentation! -- "%_mtee%" @@
+
+    "%_afl_fuzz%" -w "%_winafl%" -t 20000  -i "%_input%" -o "%_output%" -D "%_dynamorio_bin%" --  -coverage_module "mtee.exe" -target_module "mtee.exe" -target_method main -nargs 2 -fuzz_iterations 100 -target_offset 0x126B0 -covtype edge --  "%_mtee%" @@
+
+    move "%_tests%\afl.mtee.exe.*" "%_output_aflwin%" > nul 2>&1
+    move "%_tests%\childpid*.txt" "%_output_aflwin%" > nul 2>&1
 exit /b
 
 :Execute

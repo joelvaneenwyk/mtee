@@ -15,8 +15,10 @@ exit /b
 
     set _msbuild=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe
 
-    if not exist "%_mtee%" (
-        "%_msbuild%" /property:Configuration=%_mtee_config% "%_root%\workspace\mtee.sln"
+    "%_msbuild%" /property:Configuration=%_mtee_config% "%_root%\workspace\mtee.sln" > nul 2>&1
+    if errorlevel 1 (
+        echo [ERROR] Failed to build `mtee` solution.
+        exit /b 99
     )
 
     "%_mtee%" %*

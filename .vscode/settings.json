@@ -6,6 +6,8 @@
         "editor.semanticHighlighting.enabled": true
     },
 
+    "files.insertFinalNewline": false,
+
     "cSpell.words": [
         "HFNETCHK",
         "HLOCAL",

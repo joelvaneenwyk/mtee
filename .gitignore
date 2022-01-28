@@ -7,8 +7,6 @@ tests/output/
 tests/*.txt
 !/CMakeLists.txt
 
-tests/DynamoRIO/
-
 # Ghidra project files
 mtee.rep/
 mtee.gpr

@@ -1,3 +1,6 @@
 [submodule "tests/winafl"]
 	path = tests/winafl
 	url = git@github.com:joelvaneenwyk/winafl.git
+[submodule "tests/dynamorio"]
+	path = tests/dynamorio
+	url = git@github.com:DynamoRIO/dynamorio.git

@@ -4,8 +4,10 @@
 
 build
 tests/output/
-/*.txt
+tests/*.txt
 !/CMakeLists.txt
+
+tests/DynamoRIO/
 
 # Ghidra project files
 mtee.rep/

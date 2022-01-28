@@ -207,7 +207,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>header.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <LanguageStandard_C>Default</LanguageStandard_C>
@@ -221,55 +221,55 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\args.cpp">
+    <ClCompile Include="..\source\args.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">header.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\cpuload.cpp">
+    <ClCompile Include="..\source\cpuload.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">header.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\handler.cpp">
+    <ClCompile Include="..\source\handler.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">header.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\help.cpp">
+    <ClCompile Include="..\source\help.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">header.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\helpers.cpp">
+    <ClCompile Include="..\source\helpers.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">header.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\main.cpp">
+    <ClCompile Include="..\source\main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">header.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\output.cpp">
+    <ClCompile Include="..\source\output.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">header.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\pch.cpp">
+    <ClCompile Include="..\source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">header.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Clang (Release)|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\perr.cpp">
+    <ClCompile Include="..\source\perr.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">header.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\cpuload.h" />
-    <ClInclude Include="..\header.h" />
+    <ClInclude Include="..\source\cpuload.h" />
+    <ClInclude Include="..\source\header.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.clang-format" />
-    <None Include="..\.github\workflows\codeql-analysis.yml" />
-    <None Include="..\.github\workflows\main.yml" />
-    <None Include="..\LICENSE.md" />
-    <None Include="..\README.md" />
+    <None Include="..\source\.clang-format" />
+    <None Include="..\source\.github\workflows\codeql-analysis.yml" />
+    <None Include="..\source\.github\workflows\main.yml" />
+    <None Include="..\source\LICENSE.md" />
+    <None Include="..\source\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

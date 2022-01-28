@@ -14,51 +14,51 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\args.cpp">
+    <ClCompile Include="..\source\args.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\cpuload.cpp">
+    <ClCompile Include="..\source\cpuload.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\handler.cpp">
+    <ClCompile Include="..\source\handler.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\help.cpp">
+    <ClCompile Include="..\source\help.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\helpers.cpp">
+    <ClCompile Include="..\source\helpers.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\main.cpp">
+    <ClCompile Include="..\source\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\output.cpp">
+    <ClCompile Include="..\source\output.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\perr.cpp">
+    <ClCompile Include="..\source\perr.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\pch.cpp">
+    <ClCompile Include="..\source\pch.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\header.h">
+    <ClInclude Include="..\source\header.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\cpuload.h">
+    <ClInclude Include="..\source\cpuload.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.github\workflows\main.yml">
+    <None Include="..\source\.github\workflows\main.yml">
       <Filter>Workflows</Filter>
     </None>
-    <None Include="..\.github\workflows\codeql-analysis.yml">
+    <None Include="..\source\.github\workflows\codeql-analysis.yml">
       <Filter>Workflows</Filter>
     </None>
-    <None Include="..\.clang-format" />
-    <None Include="..\LICENSE" />
-    <None Include="..\README.md" />
+    <None Include="..\source\.clang-format" />
+    <None Include="..\source\LICENSE" />
+    <None Include="..\source\README.md" />
   </ItemGroup>
 </Project>

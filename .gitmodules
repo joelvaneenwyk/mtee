@@ -1,0 +1,3 @@
+[submodule "tests/winafl"]
+	path = tests/winafl
+	url = git@github.com:joelvaneenwyk/winafl.git

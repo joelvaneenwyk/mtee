@@ -12,9 +12,7 @@ exit /b
     echo Root: !_root!
 
     set _tests=%_root%\tests
-    del "%_tests%\afl.mtee.exe.*"
-    del "%_tests%\afl.*.txt"
-    del "%_tests%\mtee.txt"
+    cd /D "%_tests%"
 
     if exist "%_tests%\output" rmdir /s /q "%_tests%\output"
     mkdir "%_tests%\output"
@@ -111,6 +109,9 @@ exit /b
     ::set _dr_run=!_dr_run! -target_offset %_target_offset%
     set _dr_run=!_dr_run! -fuzz_iterations %_target_iterations%
     set _dr_run=!_dr_run! -nargs %_target_args%
+
+    del "%_tests%\afl.mtee.exe.*"
+    del "%_tests%\childpid*.txt"
     call :Execute "%_dynamorio_bin%\drrun.exe" !_dr_run! -- "%_mtee%"
     if errorlevel 1 (
         echo Failed.
@@ -132,6 +133,9 @@ exit /b
     ::set _afl_instrumentation=!_afl_instrumentation! -target_offset %_target_offset%
     ::set _afl_instrumentation=!_afl_instrumentation! -call_convention thiscall
     ::set _afl_instrumentation=!_afl_instrumentation! -covtype edge
+
+    del "%_tests%\afl.mtee.exe.*"
+    del "%_tests%\childpid*.txt"
     call :Execute "%_afl_fuzz%" %_afl_fuzz_args% -- !_afl_instrumentation! -- "%_mtee%"
 exit /b
 

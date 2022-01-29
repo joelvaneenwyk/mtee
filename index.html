@@ -1,54 +1,66 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>mtee by ritchielawrence with updates from Joel Van Eenwyk)</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">mtee</h1>
-      <h2 class="project-tagline">Windows stream splitter</h2>
-      <a href="https://github.com/joelvaneenwyk/mtee" class="btn">View on GitHub</a>
-      <a href="https://github.com/joelvaneenwyk/mtee/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/joelvaneenwyk/mtee/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
 
-    <section class="main-content">
-      <h2>
-<a id="table-of-contents" class="anchor" href="#table-of-contents" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Table of Contents</h2>
+<head>
+  <meta charset="UTF-8">
+  <title>mtee - Windows stream splitter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+</head>
 
-<ul>
-<li><a href="#synopsis">Synopsis</a></li>
-<li><a href="#usage">Usage</a></li>
-<li><a href="#examples">Examples</a></li>
-<li><a href="#faqs">FAQs</a></li>
-<li><a href="#screenshots">Screenshots</a></li>
-<li><a href="#revisions">Revisions</a></li>
-<li><a href="#copyright-and-license">Copyright and License</a></li>
-</ul>
+<body>
+  <section class="page-header">
+    <h1 class="project-name">mtee</h1>
+    <h2 class="project-tagline">Windows stream splitter</h2>
+    <a href="https://github.com/joelvaneenwyk/mtee" class="btn">View on GitHub</a>
+    <a href="https://github.com/joelvaneenwyk/mtee/zipball/master" class="btn">Download .zip</a>
+    <a href="https://github.com/joelvaneenwyk/mtee/tarball/master" class="btn">Download .tar.gz</a>
+  </section>
 
-<h2>
-<a id="synopsis" class="anchor" href="#synopsis" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Synopsis<a name="synopsis"></a>
-</h2>
+  <section class="main-content">
+    <h2>
+      <a id="table-of-contents" class="anchor" href="#table-of-contents" aria-hidden="true"><span aria-hidden="true"
+          class="octicon octicon-link"></span></a>Table of Contents</h2>
 
-<p>Mtee is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.</p>
+    <ul>
+      <li><a href="#synopsis">Synopsis</a></li>
+      <li><a href="#usage">Usage</a></li>
+      <li><a href="#examples">Examples</a></li>
+      <li><a href="#faqs">FAQs</a></li>
+      <li><a href="#screenshots">Screenshots</a></li>
+      <li><a href="#revisions">Revisions</a></li>
+      <li><a href="#copyright-and-license">Copyright and License</a></li>
+    </ul>
 
-<p>Mtee is a 19kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.</p>
+    <h2>
+      <a id="synopsis" class="anchor" href="#synopsis" aria-hidden="true"><span aria-hidden="true"
+          class="octicon octicon-link"></span></a>Synopsis<a name="synopsis"></a>
+    </h2>
 
-<p>Mtee is simple to use and only has several options. To list them, type:-</p>
+    <p><code>mtee</code> is a Win32 console application that sends any data it receives to stdout and to any number of
+      files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each
+      line of output with a timestamp.</p>
 
-<div class="highlight highlight-source-dosbatch"><pre>mtee /?</pre></div>
+    <p><code>mtee</code> is a 19kb standalone executable. It does not create any temporary files or write to the
+      registry. There is no installation procedure, just run it. To remove all traces of <code>mtee</code> from your
+      system, just delete it.</p>
 
-<h2>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage<a name="usage"></a>
-</h2>
+    <p><code>mtee</code> is simple to use and only has several options. To list them, type:-</p>
 
-<pre>
+    <div class="highlight highlight-source-dosbatch">
+      <pre>mtee /?</pre>
+    </div>
+
+    <h2>
+      <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true"
+          class="octicon octicon-link"></span></a>Usage<a name="usage"></a>
+    </h2>
+
+    <pre>
   MTEE [/A | /U] [/C] [/D] [/T] [/E] [[/+] file] [...]
 
   /A    Convert output to ANSI. Default output is same as input.
@@ -75,120 +87,159 @@
      log.txt. Each line is prefixed with local date and time.
 </pre>
 
-<h2>
-<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples<a name="examples"></a>
-</h2>
+    <h2>
+      <a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true"
+          class="octicon octicon-link"></span></a>Examples<a name="examples"></a>
+    </h2>
 
-<p>View Mtee help screen:-</p>
+    <p>View <code>mtee</code> help screen:-</p>
 
-<div class="highlight highlight-source-dosbatch"><pre>mtee/?</pre></div>
+    <div class="highlight highlight-source-dosbatch">
+      <pre>mtee/?</pre>
+    </div>
 
-<p>Send the output of script.cmd to the console and to RESULT.LOG. If RESULT.LOG already exists, it will be overwritten:-</p>
+    <p>Send the output of script.cmd to the console and to RESULT.LOG. If RESULT.LOG already exists, it will be
+      overwritten:-</p>
 
-<div class="highlight highlight-source-dosbatch"><pre>script.<span class="pl-k">cmd</span> <span class="pl-k">|</span> mtee result.log</pre></div>
+    <div class="highlight highlight-source-dosbatch">
+      <pre>script.<span class="pl-k">cmd</span> <span class="pl-k">|</span> mtee result.log</pre>
+    </div>
 
-<p>Send the output of the automated ftp session to the console and to two log files, LOCAL.LOG is overwritten if it already exists. REMOTE.LOG is appended to if it exists, otherwise it is created:-</p>
+    <p>Send the output of the automated ftp session to the console and to two log files, LOCAL.LOG is overwritten if it
+      already exists. REMOTE.LOG is appended to if it exists, otherwise it is created:-</p>
 
-<div class="highlight highlight-source-dosbatch"><pre>ftp -n -s:ftp.scr <span class="pl-k">|</span> mtee local.log /+ \\server\logs\remote.log</pre></div>
+    <div class="highlight highlight-source-dosbatch">
+      <pre>ftp -n -s:ftp.scr <span class="pl-k">|</span> mtee local.log /+ \\server\logs\remote.log</pre>
+    </div>
 
-<p>Make two copies of LOG whilst viewing LOG on the screen. If NEW1 and NEW2 already exist, they are overwritten:-</p>
+    <p>Make two copies of LOG whilst viewing LOG on the screen. If NEW1 and NEW2 already exist, they are overwritten:-
+    </p>
 
-<div class="highlight highlight-source-dosbatch"><pre>mtee <span class="pl-k">&lt;</span> log new1 new2</pre></div>
+    <div class="highlight highlight-source-dosbatch">
+      <pre>mtee <span class="pl-k">&lt;</span> log new1 new2</pre>
+    </div>
 
-<p>Redirect stdout and stderr from UPDATE.CMD to the console and appends to LOG.TXT. Each line is prefixed with local date and time:-</p>
+    <p>Redirect stdout and stderr from UPDATE.CMD to the console and appends to LOG.TXT. Each line is prefixed with
+      local date and time:-</p>
 
-<div class="highlight highlight-source-dosbatch"><pre>update.<span class="pl-k">cmd</span> <span class="pl-k">2&gt;&amp;1</span> <span class="pl-k">|</span> mtee/d/t/+ log.txt</pre></div>
+    <div class="highlight highlight-source-dosbatch">
+      <pre>update.<span class="pl-k">cmd</span> <span class="pl-k">2&gt;&amp;1</span> <span class="pl-k">|</span> mtee/d/t/+ log.txt</pre>
+    </div>
 
-<p>Send the output from BACKUP.CMD to the console and two remote log files. If there is an error opening any of the log files (server offline for instance) MTEE will continue. If the destination files already exist, they are appended to:-</p>
+    <p>Send the output from BACKUP.CMD to the console and two remote log files. If there is an error opening any of the
+      log files (server offline for instance) MTEE will continue. If the destination files already exist, they are
+      appended to:-</p>
 
-<div class="highlight highlight-source-dosbatch"><pre>backup.<span class="pl-k">cmd</span> <span class="pl-k">|</span> mtee /c/+ \\svr1\log$\bu.log /+ \\svr2\logs$\bu.log</pre></div>
+    <div class="highlight highlight-source-dosbatch">
+      <pre>backup.<span class="pl-k">cmd</span> <span class="pl-k">|</span> mtee /c/+ \\svr1\log$\bu.log /+ \\svr2\logs$\bu.log</pre>
+    </div>
 
-<p>Make multiple carbon copies of patch.exe:-</p>
+    <p>Make multiple carbon copies of patch.exe:-</p>
 
-<div class="highlight highlight-source-dosbatch"><pre><span class="pl-k">type</span> patch.exe<span class="pl-k">|</span>mtee \\pc1\c$\patch.exe \\pc2\c$\patch.exe \\pc3\c$\patch.exe</pre></div>
+    <div class="highlight highlight-source-dosbatch">
+      <pre><span class="pl-k">type</span> patch.exe<span class="pl-k">|</span>mtee \\pc1\c$\patch.exe \\pc2\c$\patch.exe \\pc3\c$\patch.exe</pre>
+    </div>
 
-<p>Make a unicode log of HFNETCHK:-</p>
+    <p>Make a unicode log of HFNETCHK:-</p>
 
-<div class="highlight highlight-source-dosbatch"><pre>hfnetchk<span class="pl-k">|</span>mtee/u log</pre></div>
+    <div class="highlight highlight-source-dosbatch">
+      <pre>hfnetchk<span class="pl-k">|</span>mtee/u log</pre>
+    </div>
 
-<p>Display stdout on the console, and stderr on the console and also to a log file with each line of stderr prefixed with local date and time:-</p>
+    <p>Display stdout on the console, and stderr on the console and also to a log file with each line of stderr prefixed
+      with local date and time:-</p>
 
-<div class="highlight highlight-source-dosbatch"><pre>batch.<span class="pl-k">cmd</span> <span class="pl-k">2&gt;&amp;1</span> <span class="pl-k">1&gt;&amp;3</span> <span class="pl-k">3&gt;&amp;1</span> <span class="pl-k">|</span>mtee/t/d log</pre></div>
+    <div class="highlight highlight-source-dosbatch">
+      <pre>batch.<span class="pl-k">cmd</span> <span class="pl-k">2&gt;&amp;1</span> <span class="pl-k">1&gt;&amp;3</span> <span class="pl-k">3&gt;&amp;1</span> <span class="pl-k">|</span>mtee/t/d log</pre>
+    </div>
 
-<h2>
-<a id="faqs" class="anchor" href="#faqs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FAQs<a name="faqs"></a>
-</h2>
+    <h2>
+      <a id="faqs" class="anchor" href="#faqs" aria-hidden="true"><span aria-hidden="true"
+          class="octicon octicon-link"></span></a>FAQs<a name="faqs"></a>
+    </h2>
 
-<p>How can I determine the exit code of the process piped into Mtee?</p>
+    <p>How can I determine the exit code of the process piped into mtee?</p>
 
-<blockquote>
-<p>Update Mtee to at least version v2.21 and use the /E option.</p>
-</blockquote>
+    <blockquote>
+      <p>Update mtee to at least version v2.21 and use the /E option.</p>
+    </blockquote>
 
-<h2>
-<a id="revisions" class="anchor" href="#revisions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Revisions<a name="revisions"></a>
-</h2>
+    <h2>
+      <a id="revisions" class="anchor" href="#revisions" aria-hidden="true"><span aria-hidden="true"
+          class="octicon octicon-link"></span></a>Revisions<a name="revisions"></a>
+    </h2>
 
-<table>
-<thead>
-<tr>
-<th>Revision</th>
-<th>Date</th>
-<th>Changes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>2.21</td>
-<td>2016-08-07</td>
-<td>Added /E option (exit with exit code of process piped into Mtee). Cleaned up code - Mtee compiles without errors or warnings using a default install of the <a href="http://www.codeblocks.org/">CodeBlocks IDE</a>.</td>
-</tr>
-<tr>
-<td>2.2</td>
-<td>2016-06-10</td>
-<td>Credit to Jari Kulmala for implementing workaround to avoid possible bug in Windows 10 where program takes 30 seconds to exit.</td>
-</tr>
-<tr>
-<td>2.1</td>
-<td>2013-03-01</td>
-<td>Mtee is now open source software released under the MIT License. Credit to Jari Kulmala for addressing the following:-<ul>
-<li>mtee is now Windows 8 compatible</li>
-<li>mtee assumed all files &lt; 4GB</li>
-<li>echo "t013|mtee /u con" entered a continuous loop</li>
-<li>"echo x x x x | mtee" caused mtee to guess input was unicode</li>
-<li>redirection to console and con device as output file was not supported</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>2.0</td>
-<td>2003-08-27</td>
-<td>The following features are new to Mtee v2.0:-<ul>
-<li>Read and output unicode</li>
-<li>Convert ANSI to unicode (and vice-versa)</li>
-<li>Reads text and binary data without performing any character translations</li>
-<li>Support for unicode filenames of ~32,000 characters</li>
-<li>Smaller than ever. Mtee is now just 11kb (and no, it's not compressed!)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+    <table>
+      <thead>
+        <tr>
+          <th>Revision</th>
+          <th>Date</th>
+          <th>Changes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2.21</td>
+          <td>2016-08-07</td>
+          <td>Added /E option (exit with exit code of process piped into mtee). Cleaned up code - mtee compiles without
+            errors or warnings using a default install of the <a href="http://www.codeblocks.org/">CodeBlocks IDE</a>.
+          </td>
+        </tr>
+        <tr>
+          <td>2.2</td>
+          <td>2016-06-10</td>
+          <td>Credit to Jari Kulmala for implementing workaround to avoid possible bug in Windows 10 where program takes
+            30 seconds to exit.</td>
+        </tr>
+        <tr>
+          <td>2.1</td>
+          <td>2013-03-01</td>
+          <td>mtee is now open source software released under the MIT License. Credit to Jari Kulmala for addressing the
+            following:-<ul>
+              <li>mtee is now Windows 8 compatible</li>
+              <li>mtee assumed all files &lt; 4GB</li>
+              <li>echo "t013|mtee /u con" entered a continuous loop</li>
+              <li>"echo x x x x | mtee" caused mtee to guess input was unicode</li>
+              <li>redirection to console and con device as output file was not supported</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>2.0</td>
+          <td>2003-08-27</td>
+          <td>The following features are new to mtee v2.0:-<ul>
+              <li>Read and output unicode</li>
+              <li>Convert ANSI to unicode (and vice-versa)</li>
+              <li>Reads text and binary data without performing any character translations</li>
+              <li>Support for unicode filenames of ~32,000 characters</li>
+              <li>Smaller than ever. mtee is now just 11kb (and no, it's not compressed!)</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-<h2>
-<a id="copyright-and-license" class="anchor" href="#copyright-and-license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Copyright and License<a name="copyright-and-license"></a>
-</h2>
+    <h2>
+      <a id="copyright-and-license" class="anchor" href="#copyright-and-license" aria-hidden="true"><span
+          aria-hidden="true" class="octicon octicon-link"></span></a>Copyright and License<a
+        name="copyright-and-license"></a>
+    </h2>
 
-<p>Code and documentation copyright 2001-2016 Ritchie Lawrence. Code released under <a href="https://github.com/joelvaneenwyk/mtee/blob/master/LICENSE.txt">MIT License</a></p>
+    <p>Code and documentation copyright 2001-2016 Ritchie Lawrence. Code released under <a
+        href="https://github.com/joelvaneenwyk/mtee/blob/master/LICENSE.txt">MIT License</a></p>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/joelvaneenwyk/mtee">Mtee</a> is maintained by <a href="https://github.com/joelvaneenwyk">Joel Van Eenwyk</a>.</span>
+    <footer class="site-footer">
+      <span class="site-footer-owner"><a href="https://github.com/joelvaneenwyk/mtee">mtee</a> is maintained by <a
+          href="https://github.com/joelvaneenwyk">Joel Van Eenwyk</a>.</span>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
+      <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>
+        using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a
+          href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+    </footer>
 
-    </section>
+  </section>
 
 
-  </body>
+</body>
+
 </html>

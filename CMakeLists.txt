@@ -11,7 +11,6 @@ add_executable(mtee
 
 target_include_directories(mtee PUBLIC source)
 target_precompile_headers(mtee PUBLIC source/header.h)
-target_compile_definitions(mtee PUBLIC _CRT_SECURE_NO_WARNINGS)
 
 if (MSVC)
     # warning level 4 and all warnings as errors

@@ -58,7 +58,7 @@
       <Filter>Workflows</Filter>
     </None>
     <None Include="..\source\.clang-format" />
-    <None Include="..\source\LICENSE" />
     <None Include="..\source\README.md" />
+    <None Include="..\source\LICENSE.md" />
   </ItemGroup>
 </Project>

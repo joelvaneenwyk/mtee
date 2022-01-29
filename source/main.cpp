@@ -1,41 +1,51 @@
-/*
-# History
-
-01-MAR-2013, MTEE 2.1
-    Bug: In Windows 8, mtee resulted to "Incorrect function" if output was to pipe.
-    Fixed to not not rely on undocumented error codes from WriteConsole.
-    At the same time, got rid of separate functions for console and disk files,
-    and combined them to WriteBufferToConsoleAndFilesA and WriteBufferToConsoleAndFilesW and separating
-    the console case with fi->bIsConsole. Some re-org to the idea of args.fi : the first item
-    is always the std output, and the rest of the files are the given output files. The last item
-    in the linked list no longer a dummy item.
-    Bug: echo x x x x | mtee guessed that the input was Unicode.
-    Fixed to use IS_TEXT_UNICODE_NULL_BYTES instead of IS_TEXT_UNICODE_ASCII16 |    IS_TEXT_UNICODE_STATISTICS.
-    Bug: echo t013|mtee /u con entered a forever loop.
-    Fixed the bug in WriteBufferToDiskW loop.
-    Bug: assumed that all files are less than 4 GB.
-    Fixed by using also dwFileSizeHigh in GetFileSize.
-    Bug: redir to console and con as output file was not supported.
-    Fixed by not trying to truncate the result file with SetEndOfFile if it is a console.
-    (redir to con may be wanted if std output is already redirected to file)
-
-27-APR-2016, MTEE 2.2
-    Workaround: Using ExitProcess at end to workaround an issue in Windows 10
-    Ref:
-
-https://connect.microsoft.com/VisualStudio/feedback/details/2640071/30-s-delay-after-returning-from-main-program
-*/
+//
+// # History
+//
+// 01-MAR-2013, MTEE 2.1
+//    Bug: In Windows 8, mtee resulted to "Incorrect function" if output was to pipe.
+//    Fixed to not not rely on undocumented error codes from WriteConsole.
+//    At the same time, got rid of separate functions for console and disk files,
+//    and combined them to WriteBufferToConsoleAndFilesA and WriteBufferToConsoleAndFilesW and separating
+//    the console case with fi->bIsConsole. Some re-org to the idea of args.fi : the first item
+//    is always the std output, and the rest of the files are the given output files. The last item
+//    in the linked list no longer a dummy item.
+//    Bug: echo x x x x | mtee guessed that the input was Unicode.
+//    Fixed to use IS_TEXT_UNICODE_NULL_BYTES instead of IS_TEXT_UNICODE_ASCII16 |    IS_TEXT_UNICODE_STATISTICS.
+//    Bug: echo t013|mtee /u con entered a forever loop.
+//    Fixed the bug in WriteBufferToDiskW loop.
+//    Bug: assumed that all files are less than 4 GB.
+//    Fixed by using also dwFileSizeHigh in GetFileSize.
+//    Bug: redir to console and con as output file was not supported.
+//    Fixed by not trying to truncate the result file with SetEndOfFile if it is a console.
+//    (redir to con may be wanted if std output is already redirected to file)
+//
+// 27-APR-2016, MTEE 2.2
+//    Workaround: Using ExitProcess at end to workaround an issue in Windows 10
+//    Ref:
+//
+// https://connect.microsoft.com/VisualStudio/feedback/details/2640071/30-s-delay-after-returning-from-main-program
+// 
 
 #include "header.h"
 
 #include <stdio.h>
+
+#ifdef _MSC_VER
+// This function or variable may be unsafe. Consider using XXX_s instead. To disable deprecation, use
+// _CRT_SECURE_NO_WARNINGS. See online help for details.
+#pragma warning(disable : 4996)
+
+// pointer or reference to potentially throwing function passed to 'extern "C"' function under -EHc. Undefined 
+// behavior may occur if this function throws an exception.
+#pragma warning(disable : 5039)
+#endif
 
 #define PEEK_BUF_SIZE (0x400) // 1024
 #define PEEK_WAIT_INT (10)
 
 DWORD dwCtrlEvent; // set by ctrl handler
 
-int __declspec(noinline) tee(ARGS *args)
+DWORD __declspec(noinline) tee(ARGS *args)
 {
     PCHAR lpBuf = nullptr;           // pointer to main input buffer
     PCHAR lpAnsiBuf = nullptr;       // pointer to buffer for converting unicode to ansi
@@ -461,7 +471,7 @@ int __declspec(noinline) tee(ARGS *args)
 int fuzz()
 {
     ARGS args;
-    return tee(&args);
+    return (int)tee(&args);
 }
 
 //

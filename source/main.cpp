@@ -455,9 +455,6 @@ int __declspec(noinline) tee(ARGS *args)
 
     FreeFileInfoStructs(&args->fi);
 
-    //
-    // Use ExitProcess (instead of return) to workaround an issue in Windows 10
-    //
     return dwExitCode;
 }
 
@@ -580,8 +577,12 @@ int main(int argc, char **argv)
 {
     // ARGS args;
     // int result = tee(&args);
+    //
+    // //Use ExitProcess (instead of return) to workaround an issue in Windows 10
     // ExitProcess(result);
+    //
     // printf("[mtee]\n");
+    //
     // return 0;
 
     if (argc < 2)

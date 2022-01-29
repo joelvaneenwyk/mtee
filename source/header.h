@@ -6,18 +6,22 @@
 
 #pragma once
 
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 5039)
 #pragma warning(disable : 4668)
 #pragma warning(disable : 4820)
+#endif
+
 #include <Windows.h>
 #include <TlHelp32.h>
 
+#ifdef _MSC_VER
 #pragma warning(pop)
-
 #pragma warning(disable : 5045) // Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
 #pragma warning(disable : 4711) // function '...' selected for automatic inline expansion
 #pragma warning(disable : 4710) // function '...' not inlined
+#endif
 
 #include "cpuload.h"
 

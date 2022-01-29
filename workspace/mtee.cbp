@@ -7,8 +7,8 @@
         <Option compiler="gcc" />
         <Build>
             <Target title="Debug">
-                <Option output="bin/Debug/mtee" prefix_auto="1" extension_auto="1" />
-                <Option object_output="obj/Debug/" />
+                <Option output="../build/codeblocks/bin/Debug/mtee" prefix_auto="1" extension_auto="1" />
+                <Option object_output="../build/codeblocks/obj/Debug/" />
                 <Option type="1" />
                 <Option compiler="gcc" />
                 <Compiler>
@@ -17,8 +17,8 @@
                 </Compiler>
             </Target>
             <Target title="Release">
-                <Option output="bin/Release/mtee" prefix_auto="1" extension_auto="1" />
-                <Option object_output="obj/Release/" />
+                <Option output="../build/codeblocks/bin/Release/mtee" prefix_auto="1" extension_auto="1" />
+                <Option object_output="../build/codeblocks/obj/Release/" />
                 <Option type="1" />
                 <Option compiler="gcc" />
                 <Compiler>
@@ -33,16 +33,16 @@
             <Add option="-Wall" />
             <Add option="-fexceptions" />
         </Compiler>
-        <Unit filename="args.cpp" />
-        <Unit filename="cpuload.cpp" />
-        <Unit filename="cpuload.h" />
-        <Unit filename="handler.cpp" />
-        <Unit filename="header.h" />
-        <Unit filename="help.cpp" />
-        <Unit filename="helpers.cpp" />
-        <Unit filename="main.cpp" />
-        <Unit filename="output.cpp" />
-        <Unit filename="perr.cpp" />
+        <Unit filename="../source/args.cpp" />
+        <Unit filename="../source/cpuload.cpp" />
+        <Unit filename="../source/cpuload.h" />
+        <Unit filename="../source/handler.cpp" />
+        <Unit filename="../source/header.h" />
+        <Unit filename="../source/help.cpp" />
+        <Unit filename="../source/helpers.cpp" />
+        <Unit filename="../source/main.cpp" />
+        <Unit filename="../source/output.cpp" />
+        <Unit filename="../source/perr.cpp" />
         <Extensions>
             <code_completion />
             <envvars />

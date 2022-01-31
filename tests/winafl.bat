@@ -32,7 +32,7 @@ exit /b
     set _target_method=main
     set _target_module=%_mtee%
     set _target_module_name=mtee.exe
-    set _target_offset=0x126B0
+    set _target_offset=0x153C0
     set _target_args=2
     set _target_iterations=100
 

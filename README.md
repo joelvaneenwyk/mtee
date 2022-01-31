@@ -1,15 +1,15 @@
-## Table of Contents
+# `mtee` <!-- omit in toc -->
 
-* [Synopsis](#synopsis)
-* [Usage](#usage)
-* [Examples](#examples)
-* [FAQs](#faqs)
-* [Screenshots](#screenshots)
-* [CPU Load](#cpu-load)
-* [Revisions](#revisions)
-* [Copyright and License](#copyright-and-license)
+- [Overview](#overview)
+  - [Usage](#usage)
+  - [Examples](#examples)
+- [FAQ](#faq)
+- [CPU Load](#cpu-load)
+- [Revisions](#revisions)
+- [Resources](#resources)
+- [Copyright and License](#copyright-and-license)
 
-## Synopsis<a name="synopsis"></a>
+## Overview
 
 `mtee` is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.
 
@@ -21,9 +21,9 @@
 mtee /?
 ```
 
-## Usage<a name="usage"></a>
+### Usage
 
-<pre>
+```help
   MTEE [/A | /U] [/C] [/D] [/T] [/E] [[/+] file] [...]
 
   /A    Convert output to ANSI. Default output is same as input.
@@ -40,8 +40,8 @@ mtee /?
 
   Example usage:-
 
-  1) `script.cmd | mtee result.txt`
-  2) `ftp -n -s:ftp.scr | mtee local.log /+ \\server\logs$\remote.log`
+  1) `script.cmd | `mtee` result.txt`
+  2) `ftp -n -s:ftp.scr | `mtee` local.log /+ \\server\logs$\remote.log`
   3) `update.cmd 2>&1 | mtee/d/t/+ log.txt`
 
   1) Sends the output of script.cmd to the console and to result.log. If
@@ -50,9 +50,9 @@ mtee /?
      local.log is overwritten if it already exists, remote.log is appended to.
   3) Redirects stdout and stderr from update.cmd to console and appends to
      log.txt. Each line is prefixed with local date and time.
-</pre>
+```
 
-## Examples<a name="examples"></a>
+### Examples
 
 View `mtee` help screen:-
 
@@ -63,13 +63,13 @@ mtee /?
 Send the output of script.cmd to the console and to RESULT.LOG. If RESULT.LOG already exists, it will be overwritten:
 
 ```batch
-script.cmd | mtee result.log
+script.cmd | `mtee` result.log
 ```
 
 Send the output of the automated ftp session to the console and to two log files, LOCAL.LOG is overwritten if it already exists. REMOTE.LOG is appended to if it exists, otherwise it is created:
 
 ```batch
-ftp -n -s:ftp.scr | mtee local.log /+ \\server\logs\remote.log
+ftp -n -s:ftp.scr | `mtee` local.log /+ \\server\logs\remote.log
 ```
 
 Make two copies of LOG whilst viewing LOG on the screen. If NEW1 and NEW2 already exist, they are overwritten:-
@@ -87,7 +87,7 @@ update.cmd 2>&1 | mtee/d/t/+ log.txt
 Send the output from BACKUP.CMD to the console and two remote log files. If there is an error opening any of the log files (server offline for instance) MTEE will continue. If the destination files already exist, they are appended to:-
 
 ```batch
-backup.cmd | mtee /c/+ \\svr1\log$\bu.log /+ \\svr2\logs$\bu.log
+backup.cmd | `mtee` /c/+ \\svr1\log$\bu.log /+ \\svr2\logs$\bu.log
 ```
 
 Make multiple carbon copies of `patch.exe`:
@@ -108,22 +108,25 @@ Display stdout on the console, and stderr on the console and also to a log file 
 batch.cmd 2>&1 1>&3 3>&1 |mtee/t/d log
 ```
 
-## FAQs<a name="faqs"></a>
+## FAQ
 
-How can I determine the exit code of the process piped into Mtee?
+How can I determine the exit code of the process piped into mtee?
 
 > Update `mtee` to at least version v2.21 and use the `/E` option.
 
-## CPU Load<a name="cpu-load"></a>
+## CPU Load
 
 The CPU load calculations are based in the information from the ```GetSystemTimes``` Windows API.
-For reference, please check: https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-getsystemtimes
+For reference, please check: <https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-getsystemtimes>
 
 The algorithm works by reading the *idle*, *kernel* and *user* times of the system (the time the system spent executing in each of these modes). Then, we define *load time* as the *kernel* time plus the *user time* and *total time* as *kernel time* plus *user time* plus *idle time*. Finally, the cpu load is calculated as the quotient between *load time* and *total time*. The mindset here is that everything that is not *idle* means loading the CPU.
 
 This is a rough estimate and subject to criticism. I'm willing to listen and implement better approaches.
 
-## Revisions<a name="revisions"></a>
+## Revisions
+
+<!-- markdownlint-capture -->
+<!-- markdownlint-disable no-inline-html Ignore inline HTML warnings inside table -->
 
 Revision | Date | Changes
 ---|---|---
@@ -131,17 +134,19 @@ Revision | Date | Changes
 2.5 | 2019-04-14 | Added /CPU option (calculate and display average CPU load).
 2.4 | 2018-08-16 | Fixed elapsed time display (added a newline at the end).
 2.3 | 2018-06-21 | Added /ET option (calculate and display elapsed time).
-2.21 | 2016-08-07 | Added /E option (exit with exit code of process piped into Mtee). Cleaned up code - Mtee compiles without errors or warnings using a default install of the [CodeBlocks IDE](http://www.codeblocks.org/).
+2.21 | 2016-08-07 | Added /E option (exit with exit code of process piped into mtee). Cleaned up code - `mtee` compiles without errors or warnings using a default install of the [CodeBlocks IDE](http://www.codeblocks.org/).
 2.2 | 2016-06-10 | Credit to Jari Kulmala for implementing workaround to avoid possible bug in Windows 10 where program takes 30 seconds to exit.
-2.1 | 2013-03-01 | Mtee is now open source software released under the MIT License. Credit to Jari Kulmala for addressing the following:-<ul><li>mtee is now Windows 8 compatible</li><li>mtee assumed all files < 4GB</li><li>echo "t013\|mtee /u con" entered a continuous loop</li><li>"echo x x x x \| mtee" caused mtee to guess input was unicode</li><li>redirection to console and con device as output file was not supported</li></ul>
-2.0 | 2003-08-27 | The following features are new to Mtee v2.0:-<ul><li>Read and output unicode</li><li>Convert ANSI to unicode (and vice-versa)</li><li>Reads text and binary data without performing any character translations</li><li>Support for unicode filenames of ~32,000 characters</li><li>Smaller than ever. Mtee is now just 11kb (and no, it's not compressed!)</li></ul>
+2.1 | 2013-03-01 | `mtee` is now open source software released under the MIT License. Credit to Jari Kulmala for addressing the following:<ul><li>`mtee` is now Windows 8 compatible</li><li>`mtee` assumed all files < 4GB</li><li>`echo "t013\|mtee /u con"` entered a continuous loop</li><li>`echo x x x x \| mtee` caused `mtee` to guess input was unicode</li><li>Redirection to console and con device as output file was not supported</li></ul>
+2.0 | 2003-08-27 | The following features are new to `mtee` v2.0:-<ul><li>Read and output unicode</li><li>Convert ANSI to unicode (and vice-versa)</li><li>Reads text and binary data without performing any character translations</li><li>Support for unicode filenames of ~32,000 characters</li><li>Smaller than ever. `mtee` is now just 11kb (and no, it's not compressed!)</li></ul>
+
+<!-- markdownlint-restore -->
 
 ## Resources
 
-* [wintee](https://code.google.com/archive/p/wintee/)
-   - Similar project but has not been updated in a long time.
-   - [wintee GitHub fork](https://github.com/WinLAFS/wintee)
+- [wintee](https://code.google.com/archive/p/wintee/)
+  - Similar project but has not been updated in a long time.
+  - [wintee GitHub fork](https://github.com/WinLAFS/wintee)
 
-## Copyright and License<a name="copyright-and-license"></a>
+## Copyright and License
 
 Code and documentation copyright 2001-2016 Ritchie Lawrence. Code released under [MIT License](https://github.com/ritchielawrence/mtee/blob/master/LICENSE.txt)

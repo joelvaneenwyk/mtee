@@ -21,6 +21,7 @@
         "lstrcmp",
         "lstrcmpi",
         "lstrcpy",
+        "markdownlint",
         "Mtee",
         "PCHAR",
         "PFILEINFO",

@@ -11,6 +11,8 @@
 
 ## Synopsis<a name="synopsis"></a>
 
+⚠️ This is a fork! This was forked from [danielt3/mtee](https://github.com/danielt3/mtee) > [ritchielawrence/mtee](https://github.com/ritchielawrence/mtee).
+
 `mtee` is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.
 
 `mtee` is a small (~45kb) standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of `mtee` from your system, just delete it.

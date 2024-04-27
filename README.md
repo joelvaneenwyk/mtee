@@ -1,17 +1,21 @@
+# `mtee`
+
+> ⚠️ This is a fork from [danielt3/mtee](https://github.com/danielt3/mtee) > [ritchielawrence/mtee](https://github.com/ritchielawrence/mtee).
+
 ## Table of Contents
 
-* [Synopsis](#synopsis)
-* [Usage](#usage)
-* [Examples](#examples)
-* [FAQs](#faqs)
-* [Screenshots](#screenshots)
-* [CPU Load](#cpu-load)
-* [Revisions](#revisions)
-* [Copyright and License](#copyright-and-license)
+- [`mtee`](#mtee)
+  - [Table of Contents](#table-of-contents)
+  - [Synopsis](#synopsis)
+  - [Usage](#usage)
+  - [Examples](#examples)
+  - [FAQs](#faqs)
+  - [Screenshots](#screenshots)
+  - [CPU Load](#cpu-load)
+  - [Revisions](#revisions)
+  - [Copyright and License](#copyright-and-license)
 
-## Synopsis<a name="synopsis"></a>
-
-⚠️ This is a fork! This was forked from [danielt3/mtee](https://github.com/danielt3/mtee) > [ritchielawrence/mtee](https://github.com/ritchielawrence/mtee).
+## Synopsis
 
 `mtee` is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.
 
@@ -22,6 +26,8 @@
 ```batch
 mtee /?
 ```
+
+<!-- markdownlint-disable MD033 -->
 
 ## Usage<a name="usage"></a>
 
@@ -123,7 +129,7 @@ How can I determine the exit code of the process piped into Mtee?
 ## CPU Load<a name="cpu-load"></a>
 
 The CPU load calculations are based in the information from the ```GetSystemTimes``` Windows API.
-For reference, please check: https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-getsystemtimes
+For reference, please check: <https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-getsystemtimes>
 
 The algorithm works by reading the *idle*, *kernel* and *user* times of the system (the time the system spent executing in each of these modes). Then, we define *load time* as the *kernel* time plus the *user time* and *total time* as *kernel time* plus *user time* plus *idle time*. Finally, the cpu load is calculated as the quotient between *load time* and *total time*. The mindset here is that everything that is not *idle* means loading the CPU.
 

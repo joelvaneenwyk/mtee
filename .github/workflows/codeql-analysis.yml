@@ -1,31 +1,18 @@
-# For most projects, this workflow file will not need changing; you simply need
-# to commit it to your repository.
-#
-# You may wish to alter this file to override the set of languages analyzed,
-# or to provide custom queries or build logic.
-#
-# ******** NOTE ********
-# We have attempted to detect the languages in your repository. Please check
-# the `language` matrix defined below to confirm you have the correct set of
-# supported CodeQL languages.
-#
 name: "CodeQL"
 
 on:
   push:
-    branches: [ '**' ]
+    branches: [main, develop]
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ '**' ]
+    branches: [main, develop]
   schedule:
     - cron: '28 16 * * 5'
 
 jobs:
   analyze:
     name: Analyze
-
-    # The 'windows-2022' image is not yet supported for compiled languages as of January 2022.
-    runs-on: windows-2019
+    
+    runs-on: windows-latest
 
     permissions:
       actions: read
@@ -35,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'cpp' ]
+        language: [cpp]
 
     steps:
     - name: Checkout repository
@@ -45,18 +32,14 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        # If you wish to specify custom queries, you can do so here or in a config file.
-        # By default, queries listed here will override any specified in a config file.
-        # Prefix the list here with "+" to use these queries and those in the config file.
-        # queries: ./path/to/local/query, your-org/your-repo/queries@main
-        
+
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.3
+      uses: microsoft/setup-msbuild@v2
       with:
         vs-version: '16.5'
 
     - name: Build Solution
-      run: msbuild /p:PlatformToolset=v142 /p:Configuration=Release "workspace\mtee.sln"      
+      run: msbuild /p:PlatformToolset=v142 /p:Configuration=Release "workspace/mtee.sln"      
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

@@ -109,7 +109,7 @@ BOOL WriteBufferToConsoleAndFilesW(LPARGS args, PWCHAR lpBuf, DWORD dwCharsRead,
     return TRUE;
 }
 
-BOOL AnsiToUnicode(PWCHAR *lpDest, PCHAR lpSrc, LPDWORD lpSize)
+BOOL AnsiToUnicode(PWCHAR *lpDest, PCHAR lpSrc, LPINT lpSize)
 {
     int iWideCharLen;
     if (*lpDest)
@@ -138,7 +138,7 @@ BOOL AnsiToUnicode(PWCHAR *lpDest, PCHAR lpSrc, LPDWORD lpSize)
     return TRUE;
 }
 
-BOOL UnicodeToAnsi(PCHAR *lpDest, PWCHAR lpSrc, LPDWORD lpSize)
+BOOL UnicodeToAnsi(PCHAR *lpDest, PWCHAR lpSrc, LPWCH lpSize)
 {
     int iAnsiCharLen;
     if (*lpDest)
@@ -151,7 +151,7 @@ BOOL UnicodeToAnsi(PCHAR *lpDest, PWCHAR lpSrc, LPDWORD lpSize)
     if (lpDest == NULL)
         return FALSE;
 
-    *lpSize = WideCharToMultiByte(GetConsoleCP(), 0, lpSrc, *lpSize, *lpDest, iAnsiCharLen, NULL, NULL);
+    *lpSize = (WCHAR)WideCharToMultiByte(GetConsoleCP(), 0, lpSrc, *lpSize, *lpDest, iAnsiCharLen, NULL, NULL);
 
     // temp change RE lienhart post CP_ACP
     //*lpSize = WideCharToMultiByte(CP_ACP, 0, lpSrc, *lpSize, *lpDest, iAnsiCharLen, NULL, NULL);

@@ -1,8 +1,23 @@
+#pragma once
+
 #define _WIN32_WINNT 0x0502
 #define WIN32_LEAN_AND_MEAN
 
+#pragma warning(disable : 4577)
+#pragma warning(disable : 4711)
+#pragma warning(disable : 4710)
+#pragma warning(disable : 5045)
+
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+
 #include <windows.h>
+
+#pragma warning(push)
+#pragma warning(disable : 4820)
 #include <tlhelp32.h>
+#pragma warning(pop)
 
 #include "cpuload.h"
 
@@ -83,7 +98,7 @@ PFILEINFO CreateFileInfoStruct(PFILEINFO *fi);
 BOOL WINAPI HandlerRoutine(DWORD);
 HWND GetConsoleHandle(VOID);
 VOID ShowFileType(HANDLE);
-int ShowHelp(VOID);
+UINT ShowHelp(VOID);
 VOID ShowPipeInfo(HANDLE h);
 VOID ConfigStdIn(HANDLE h);
 PWSTR CreateFullPathW(PWSTR szPath);
@@ -95,7 +110,7 @@ BOOL IsAnOutputConsoleDevice(HANDLE h);
 DWORD GetParentProcessId(VOID);
 HANDLE GetPipedProcessHandle(VOID);
 
-int FormatElapsedTime(LARGE_INTEGER *elapsedTime, PCHAR outBuf, const int outBufSize);
+int FormatElapsedTime(LARGE_INTEGER *elapsedTime, PCHAR outBuf, const size_t outBufSize);
 
 // perr.cpp
 DWORD Perror(DWORD dwErrNum);
@@ -104,6 +119,6 @@ VOID Verbose(LPCTSTR szMsg);
 // output.cpp
 BOOL WriteBufferToConsoleAndFilesA(LPARGS args, PCHAR lpBuf, DWORD dwCharsRead, BOOL AddDate, BOOL AddTime);
 BOOL WriteBufferToConsoleAndFilesW(LPARGS args, PWCHAR lpBuf, DWORD dwCharsRead, BOOL AddDate, BOOL AddTime);
-BOOL AnsiToUnicode(PWCHAR *lpDest, PCHAR lpSrc, LPDWORD lpSize);
-BOOL UnicodeToAnsi(PCHAR *lpDest, PWCHAR lpSrc, LPDWORD lpSize);
+BOOL AnsiToUnicode(PWCHAR *lpDest, PCHAR lpSrc, LPINT lpSize);
+BOOL UnicodeToAnsi(PCHAR *lpDest, PWCHAR lpSrc, LPWCH lpSize);
 BOOL WriteBom(PFILEINFO fi, BOOL bContinue);

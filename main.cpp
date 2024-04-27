@@ -169,7 +169,7 @@ int main(VOID)
             if (!GetConsoleMode(hIn, &dwInMode)) // fails (err 6) if NUL, COMx, AUX
             {
                 COMMTIMEOUTS CommTimeouts;
-                // suceeds if AUX or COMx so quit (allow NUL)
+                // succeeds if AUX or COMx so quit (allow NUL)
                 if (GetCommTimeouts(hIn, &CommTimeouts))
                     ExitProcess(ERROR_SUCCESS);
             }

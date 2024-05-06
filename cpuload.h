@@ -1,7 +1,7 @@
-#ifndef CPULOAD_H_INCLUDED
-#define CPULOAD_H_INCLUDED
+#ifndef MTEE_CPULOAD_H_INCLUDED
+#define MTEE_CPULOAD_H_INCLUDED
 
 void cpuLoadInit(void);
-BOOL cpuLoadGetCurrentCpuLoad(double *currentCpuLoad);
+int cpuLoadGetCurrentCpuLoad(double *currentCpuLoad);
 
-#endif // CPULOAD_H_INCLUDED
+#endif // MTEE_CPULOAD_H_INCLUDED

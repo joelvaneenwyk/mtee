@@ -6,9 +6,9 @@ name: CI
 # events but only for the main branch
 on:
   push:
-    branches: [ '**' ]
+    branches: [main, develop]
   pull_request:
-    branches: [ '**' ]
+    branches: [main, develop]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: [ 'Debug', 'Release' ]
+        config: [Debug, Release]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -34,4 +34,3 @@ jobs:
 
     - name: Build Solution
       run: msbuild /p:Configuration=${{ matrix.config }} "workspace/mtee.sln"
-

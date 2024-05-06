@@ -1,10 +1,5 @@
 #include "header.h"
 
-#include <math.h>
-#include <stdio.h>
-
-#include "cpuload.h"
-
 static ULARGE_INTEGER lastKernelTime_;
 static ULARGE_INTEGER lastIdleTime_;
 static ULARGE_INTEGER lastUserTime_;
@@ -34,7 +29,7 @@ static BOOL GetSystemTimesAsUlargeInteger_(
     return rc;
 }
 
-BOOL cpuLoadGetCurrentCpuLoad(double *currentCpuLoad)
+int cpuLoadGetCurrentCpuLoad(double *currentCpuLoad)
 {
     ULARGE_INTEGER currentKernelTime;
     ULARGE_INTEGER currentIdleTime;
@@ -70,7 +65,7 @@ BOOL cpuLoadGetCurrentCpuLoad(double *currentCpuLoad)
         loadTime.QuadPart = kernelTime.QuadPart + userTime.QuadPart;
         totalTime.QuadPart = kernelTime.QuadPart + userTime.QuadPart + idleTime.QuadPart;
 
-        *currentCpuLoad = (double)((loadTime.QuadPart * 100.0) / (totalTime.QuadPart));
+        *currentCpuLoad = (double)(loadTime.QuadPart * 100) / (double)(totalTime.QuadPart);
 
         lastIdleTime_.QuadPart = idleTime.QuadPart;
         lastKernelTime_.QuadPart = kernelTime.QuadPart;

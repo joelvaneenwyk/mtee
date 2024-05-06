@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "ms-vscode.cpptools",
+        "jeff-hykin.better-cpp-syntax",
+        "franneck94.c-cpp-runner"
+    ]
+}

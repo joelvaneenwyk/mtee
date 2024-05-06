@@ -1,11 +1,35 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30309.148
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34818.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mtee", "mtee.vcxproj", "{8FAF96CA-B514-45F1-8D3F-45BD3E6592F9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "{root}", "{root}", "{B36B10C9-AE5E-4FCE-B2BE-B30D18DD0F06}"
+	ProjectSection(SolutionItems) = preProject
+		..\.clang-format = ..\.clang-format
+		..\.gitignore = ..\.gitignore
+		..\LICENSE.md = ..\LICENSE.md
+		..\mtee.cbp = ..\mtee.cbp
+		..\mtee.ico = ..\mtee.ico
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{C816428C-34ED-4F4C-8481-257D74B87569}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\dependabot.yml = ..\.github\dependabot.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{649E80E0-FD93-4B74-822A-303D2ACD81B6}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\codeql-analysis.yml = ..\.github\workflows\codeql-analysis.yml
+		..\.github\workflows\main.yml = ..\.github\workflows\main.yml
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(NestedProjects) = preSolution
+		{649E80E0-FD93-4B74-822A-303D2ACD81B6} = {C816428C-34ED-4F4C-8481-257D74B87569}
+		{C816428C-34ED-4F4C-8481-257D74B87569} = {B36B10C9-AE5E-4FCE-B2BE-B30D18DD0F06}
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86

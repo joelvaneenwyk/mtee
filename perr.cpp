@@ -29,7 +29,7 @@ VOID Verbose(LPCTSTR szMsg)
 {
     DWORD cBytes;
 
-    WriteFile(GetStdHandle(STD_ERROR_HANDLE), szMsg, lstrlen(szMsg), &cBytes, NULL);
+    WriteFile(GetStdHandle(STD_ERROR_HANDLE), szMsg, (DWORD)lstrlen(szMsg), &cBytes, NULL);
 }
 
 /*

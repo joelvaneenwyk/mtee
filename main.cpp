@@ -40,7 +40,7 @@ int main(VOID)
     PCHAR lpBuf = NULL;              // pointer to main input buffer
     PCHAR lpAnsiBuf = NULL;          // pointer to buffer for converting unicode to ansi
     PWCHAR lpUnicodeBuf = NULL;      // pointer to buffer for converting ansi to unicode
-    DWORD dwBytesRead = 0L;          // bytes read from input
+    INT dwBytesRead = 0L;          // bytes read from input
     HANDLE hOut = NULL;              // handle to stdout
     HANDLE hIn = NULL;               // handle to stdin
     DWORD dwStdInType = (DWORD)NULL; // stdin's filetype (file/pipe/console)
@@ -48,11 +48,11 @@ int main(VOID)
     BOOL bBomFound = FALSE;          // true if BOM found
     BOOL bCtrlHandler = FALSE;
     ARGS args; // holds commandline arguments/options
-    DWORD dwPeekBytesRead = 0L;
-    DWORD dwPeekBytesAvailable = 0L;
-    DWORD dwPeekBytesUnavailable = 0L;
+    INT dwPeekBytesRead = 0L;
+    INT dwPeekBytesAvailable = 0L;
+    INT dwPeekBytesUnavailable = 0L;
     DWORD cPeekTimeout = 0L;
-    BYTE byPeekBuf[PEEK_BUF_SIZE]; // holds peeked input for ansi/unicode test
+    BYTE byPeekBuf[PEEK_BUF_SIZE] = {}; // holds peeked input for ansi/unicode test
     DWORD dwInFormat = OP_ANSI_IN;
     DWORD dwOperation;
     int iFlags;
@@ -142,7 +142,7 @@ int main(VOID)
         {
             if (!ReadFile(
                     hIn, byPeekBuf, dwFileSizeAtLeast < sizeof(byPeekBuf) ? dwFileSizeAtLeast : sizeof(byPeekBuf),
-                    &dwPeekBytesRead, NULL))
+                    (LPDWORD)&dwPeekBytesRead, NULL))
             {
                 //
                 // if failed and if i/o errors not being ignored then quit
@@ -169,7 +169,7 @@ int main(VOID)
             if (!GetConsoleMode(hIn, &dwInMode)) // fails (err 6) if NUL, COMx, AUX
             {
                 COMMTIMEOUTS CommTimeouts;
-                // suceeds if AUX or COMx so quit (allow NUL)
+                // succeeds if AUX or COMx so quit (allow NUL)
                 if (GetCommTimeouts(hIn, &CommTimeouts))
                     ExitProcess(ERROR_SUCCESS);
             }
@@ -182,9 +182,9 @@ int main(VOID)
                     hIn,                      // handle to pipe to copy from
                     byPeekBuf,                // pointer to data buffer
                     PEEK_BUF_SIZE,            // size, in bytes, of data buffer
-                    &dwPeekBytesRead,         // pointer to number of bytes read
-                    &dwPeekBytesAvailable,    // pointer to total number of bytes available
-                    &dwPeekBytesUnavailable)) // pointer to unread bytes in this message
+                    (LPDWORD)&dwPeekBytesRead,     // pointer to number of bytes read
+                    (LPDWORD)&dwPeekBytesAvailable, // pointer to total number of bytes available
+                    (LPDWORD)&dwPeekBytesUnavailable)) // pointer to unread bytes in this message
             {
                 if (GetLastError() != ERROR_BROKEN_PIPE)
                     ExitProcess(Perror((DWORD)NULL));
@@ -299,7 +299,7 @@ int main(VOID)
     //
     if (bBomFound)
     {
-        if (!ReadFile(hIn, lpBuf, sizeof(WCHAR), &dwBytesRead, NULL))
+        if (!ReadFile(hIn, lpBuf, sizeof(WCHAR), (LPDWORD)&dwBytesRead, NULL))
         {
             if (GetLastError() != ERROR_BROKEN_PIPE)
                 ExitProcess(Perror((DWORD)NULL));
@@ -317,10 +317,10 @@ int main(VOID)
         }
     }
 
-    LARGE_INTEGER startTimestamp = {0};
-    LARGE_INTEGER endTimestamp = {0};
-    LARGE_INTEGER elapsedTime = {0};
-    LARGE_INTEGER frequency = {0};
+    LARGE_INTEGER startTimestamp = {{0}};
+    LARGE_INTEGER endTimestamp = {{0}};
+    LARGE_INTEGER elapsedTime = {{0}};
+    LARGE_INTEGER frequency = {{0}};
 
     if (args.bElapsedTime)
     {
@@ -344,7 +344,7 @@ int main(VOID)
             accumulatedCpuLoad += currentCpuLoad;
         }
 
-        if (!ReadFile(hIn, lpBuf, args.dwBufSize * sizeof(CHAR), &dwBytesRead, NULL))
+        if (!ReadFile(hIn, lpBuf, args.dwBufSize * sizeof(CHAR), (LPDWORD)&dwBytesRead, NULL))
         {
             if (GetLastError() != ERROR_BROKEN_PIPE)
             {
@@ -359,7 +359,7 @@ int main(VOID)
             break;
         if (dwOperation == OP_ANSI_IN_ANSI_OUT)
         {
-            if (!WriteBufferToConsoleAndFilesA(&args, lpBuf, dwBytesRead, args.bAddDate, args.bAddTime))
+            if (!WriteBufferToConsoleAndFilesA(&args, lpBuf, (DWORD)dwBytesRead, args.bAddDate, args.bAddTime))
             {
                 Perror((DWORD)NULL);
                 break;
@@ -377,7 +377,7 @@ int main(VOID)
         else if (dwOperation == OP_ANSI_IN_UNICODE_OUT)
         {
             AnsiToUnicode(&lpUnicodeBuf, lpBuf, &dwBytesRead);
-            if (!WriteBufferToConsoleAndFilesW(&args, (PWCHAR)lpUnicodeBuf, dwBytesRead, args.bAddDate, args.bAddTime))
+            if (!WriteBufferToConsoleAndFilesW(&args, (PWCHAR)lpUnicodeBuf, (DWORD)dwBytesRead, args.bAddDate, args.bAddTime))
             {
                 Perror((DWORD)NULL);
                 break;
@@ -385,7 +385,7 @@ int main(VOID)
         }
         else if (dwOperation == OP_UNICODE_IN_ANSI_OUT)
         {
-            UnicodeToAnsi(&lpAnsiBuf, (PWCHAR)lpBuf, &dwBytesRead);
+            UnicodeToAnsi(&lpAnsiBuf, (PWCHAR)lpBuf, (LPWCH)&dwBytesRead);
             if (!WriteBufferToConsoleAndFilesA(
                     &args, lpAnsiBuf, dwBytesRead / sizeof(WCHAR), args.bAddDate, args.bAddTime))
             {
@@ -408,7 +408,7 @@ int main(VOID)
         elapsedTime.QuadPart /= frequency.QuadPart;
 
         strLen = FormatElapsedTime(&elapsedTime, strElapsedTime, sizeof(strElapsedTime));
-        WriteBufferToConsoleAndFilesA(&args, strElapsedTime, strLen, FALSE, FALSE);
+        WriteBufferToConsoleAndFilesA(&args, strElapsedTime, (DWORD)strLen, FALSE, FALSE);
     }
 
     if (args.bMeasureCPUUsage)
@@ -419,7 +419,7 @@ int main(VOID)
 
         cpuLoadStrlen = snprintf(cpuLoadStr, sizeof(cpuLoadStr), "CPU Load (avg.) = %5.2f\n", averageCpuLoad);
 
-        WriteBufferToConsoleAndFilesA(&args, cpuLoadStr, cpuLoadStrlen, FALSE, FALSE);
+        WriteBufferToConsoleAndFilesA(&args, cpuLoadStr, (DWORD)cpuLoadStrlen, FALSE, FALSE);
     }
 
     //

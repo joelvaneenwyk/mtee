@@ -132,10 +132,13 @@ PFILEINFO CreateFileInfoStruct(PFILEINFO *fi)
 
 VOID FreeFileInfoStructs(PFILEINFO fi)
 {
-    while (fi)
+    PFILEINFO cur = fi;
+    while (cur != nullptr)
     {
-        HeapFree(GetProcessHeap(), 0, fi->lpFileName);
-        HeapFree(GetProcessHeap(), 0, fi = fi->fiNext);
+        HeapFree(GetProcessHeap(), 0, cur->lpFileName);
+        PFILEINFO next = cur->fiNext;
+        HeapFree(GetProcessHeap(), 0, cur);
+        cur = next;
     }
 }
 
